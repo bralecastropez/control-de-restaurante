@@ -2,6 +2,7 @@ package org.brandon.ui;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
@@ -20,30 +21,47 @@ import javafx.scene.input.KeyCode;
 
 import javafx.beans.property.SimpleListProperty;
 
-import org.brandon.beans.Usuario;
-import org.brandon.manejadores.ManejadorUsuario;
+import org.brandon.beans.Persona;
+import org.brandon.manejadores.ManejadorPersona;
 import org.brandon.db.Conexion;
+import org.brandon.utilidades.BarraDeProgreso;
+import org.brandon.utilidades.BarraDeMenu;
 
 public class Principal extends Application implements EventHandler<Event>{
+	private BorderPane bpPrincipal;
 	private TextField tfNombre;
 	private PasswordField pfPass;
 	private Label lblNombre, lblPass;
 	private TabPane tpPrincipal;
-	private Tab tbLogin, tbUsuarios;
-	private GridPane gpLogin,gpContainerUsuarios;
-	private BorderPane bpUsuarios;
-	private TableView<Usuario> tvUsuarios;
+	private Tab tbLogin, tbPersonas;
+	private GridPane gpLogin;
+	private TableView<Persona> tvPersonas;
 	private TableColumn tvNombre, tvRol;
-	private ManejadorUsuario mUsuario;
+	private ManejadorPersona mPersona;
 	private Scene primaryScene;
 	private TableColumn tcColumnNombre, tcColumnRol;
 	
 	public void start(Stage primaryStage){
-		this.setMUsuario(new ManejadorUsuario(new Conexion()));
-
+		this.setMPersona(new ManejadorPersona(new Conexion()));
+		
+		//primaryScene.getStylesheets().add("J:\\Proyecto III Bimestre\\recursos\\application.css");
 		primaryScene = new Scene(this.getTabPane());
+		
+		//primaryStage.getIcons().add(new Image("J:\\Proyecto III Bimestre\\recursos\\icon.png"));
+		primaryStage.setMaxHeight(800);
+		primaryStage.setMaxWidth(1250);
+		primaryStage.setMinHeight(800);
+		primaryStage.setMinWidth(1250);
 		primaryStage.setScene(primaryScene);
 		primaryStage.show();
+	}
+	public BorderPane getBorderRoot(){
+		if(bpPrincipal == null){
+			//bpPrincipal.setBottom(BarraDeProgreso.getInstancia().start());
+			//bpPrincipal.setCenter(this.getTabPane());
+			//bpPrincipal.setTop(BarraDeMenu.getInstacia().start());
+		}
+		return bpPrincipal;
 	}
 	public TabPane getTabPane(){
 		if(tpPrincipal == null){
@@ -61,16 +79,16 @@ public class Principal extends Application implements EventHandler<Event>{
 		return tbLogin;
 	}
 	public Tab getContentUsuarios(){
-		if(tvUsuarios==null && tbUsuarios==null){
-			tbUsuarios = new Tab("Lista Usuarios");
+		if(tvPersonas==null && tbPersonas==null){
+			tbPersonas = new Tab("Lista Usuarios");
 			tvNombre = new TableColumn("Nombre");
 			tvRol = new TableColumn("Rol");
-			tvUsuarios = new TableView<Usuario>();
-			tvUsuarios.getColumns().addAll(tvNombre, tvRol);
-			tbUsuarios.setClosable(false);
-			tbUsuarios.setContent(tvUsuarios);
+			tvPersonas = new TableView<Persona>();
+			tvPersonas.getColumns().addAll(tvNombre, tvRol);
+			tbPersonas.setClosable(false);
+			tbPersonas.setContent(tvPersonas);
 		}
-		return tbUsuarios;
+		return tbPersonas;
 	}
 	public GridPane getContentLogin(){
 		if(gpLogin == null){
@@ -92,15 +110,15 @@ public class Principal extends Application implements EventHandler<Event>{
 		}
 		return gpLogin;
 	}
-	public void setMUsuario(ManejadorUsuario mUsuario){
-		this.mUsuario = mUsuario;
+	public void setMPersona(ManejadorPersona mPersona){
+		this.mPersona = mPersona;
 	}
 	public void handle(Event event){
 		if(event instanceof KeyEvent){
 			KeyEvent keyEvent = (KeyEvent)event;
 			if(keyEvent.getCode()==KeyCode.ENTER){
 				if(!tfNombre.getText().trim().equals("") & !pfPass.getText().trim().equals("")){
-					if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
+					if(mPersona.conectar(tfNombre.getText(), pfPass.getText())){
 						tpPrincipal.getTabs().remove(tbLogin);
 						tpPrincipal.getTabs().add(this.getContentUsuarios());
 					}else{
