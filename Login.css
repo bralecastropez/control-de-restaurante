@@ -1,0 +1,26 @@
+#font{
+	-fx-background-image: url("backgroundlogin.jpg");
+}
+.label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+#Verificar{
+	-fx-background-color: #000000,
+	linear-gradient(#7ebcea, #2f4b8f),
+	linear-gradient(#426ab7, #263e75),
+	linear-gradient(#395cab, #223768);
+	-fx-background-insets: 0,1,2,3;
+	-fx-background-radius: 3,2,2,2;
+	-fx-padding: 12 30 12 30;
+	-fx-text-fill: white;
+	-fx-font-size: 12px;
+}
+#Logintext {
+   -fx-font-size: 32px;
+   -fx-font-family: "Arial Black";
+   -fx-fill: #818181;
+   -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}

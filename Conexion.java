@@ -14,10 +14,11 @@ public class Conexion{
 			//Cargamos el driver
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			//cargamos la conexion a partir del driver
-			//------Driver de Casa
-			cnx = DriverManager.getConnection("jdbc:sqlserver://BRANDON-PC\\SQLEXPRESS;databaseName=dbRestauranteProyecto2013155", "brandon", "brandon");
-			//------Driver de Kinal
-			//cnx = DriverManager.getConnection("jdbc:sqlserver://169.254.182.190:1433;databaseName=dbRestauranteProyecto2013155", "SQLServerBrowser", "brandon");
+			
+			//Driver Kinal
+			//cnx = DriverManager.getConnection("jdbc:sqlserver://LABI23-17;databaseName=dbRestauranteProyecto", "SQLServerBrowser", "brandon");
+			//Driver Casa
+			cnx = DriverManager.getConnection("jdbc:sqlserver://BRANDON-PC\\SQLEXPRESS;databaseName=dbRestauranteProyecto", "brandon", "brandon");
 			//creamos el statement a partir de la conexion para ejecutar consultas y sentencias en sql
 			stm = cnx.createStatement();
 		}catch(ClassNotFoundException cl){

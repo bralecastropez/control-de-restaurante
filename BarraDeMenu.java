@@ -26,14 +26,14 @@ public class BarraDeMenu extends Application implements EventHandler<Event>{
 	private Label lblUno;
 	private Stage pStageUno;
 	
-	public static BarraDeMenu getInstacia(){
+	public static BarraDeMenu getInstancia(){
 		if(instancia==null){
 			instancia = new BarraDeMenu();
 		}
 		return instancia;
 	}
 	
-	public Node start(){
+	public MenuBar start(){
 		
 		tpUno = new TitledPane("T1", new Button("B1"));
 		tpDos = new TitledPane("T2", new Button("B2"));
@@ -48,9 +48,9 @@ public class BarraDeMenu extends Application implements EventHandler<Event>{
 		        System.exit(0);
 		    }
 		});
-		miDos = new MenuItem("¿Te gusto?");
-		miTres = new MenuItem("Tema");
-		miCuatro = new MenuItem("Contactanos");
+		//miDos = new MenuItem("¿Te gusto?");
+		//miTres = new MenuItem("Tema");
+		//miCuatro = new MenuItem("Contactanos");
 		miCinco = new MenuItem("Acerca de...");
 		miCinco.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
@@ -80,11 +80,11 @@ public class BarraDeMenu extends Application implements EventHandler<Event>{
 		
 		mUno= new Menu("Aplicacion");
 		mUno.getItems().add(miUno);
-		mUno.getItems().add(miDos);
+		//mUno.getItems().add(miDos);
 		mDos= new Menu("Herramientas");
-		mDos.getItems().add(miTres);
+		//mDos.getItems().add(miTres);
 		mTres= new Menu("Ayuda");
-		mTres.getItems().add(miCuatro);
+		//mTres.getItems().add(miCuatro);
 		mTres.getItems().add(miCinco);
 		
 		mbUno = new MenuBar();
@@ -100,8 +100,7 @@ public class BarraDeMenu extends Application implements EventHandler<Event>{
 
 	@Override
 	public void handle(Event arg0) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 	
 
