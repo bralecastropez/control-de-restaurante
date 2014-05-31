@@ -20,8 +20,6 @@ public class BarraDeMenu extends Application implements EventHandler<Event>{
 	private static BarraDeMenu instancia;
 	private MenuBar mbUno;
 	private Menu mUno, mDos, mTres;
-	private TitledPane tpUno, tpDos, tpTres;
-	private Accordion aUno;
 	private MenuItem miUno,miDos,miTres,miCuatro,miCinco;
 	private Label lblUno;
 	private Stage pStageUno;
@@ -33,14 +31,7 @@ public class BarraDeMenu extends Application implements EventHandler<Event>{
 		return instancia;
 	}
 	
-	public MenuBar start(){
-		
-		tpUno = new TitledPane("T1", new Button("B1"));
-		tpDos = new TitledPane("T2", new Button("B2"));
-		tpTres = new TitledPane("T3", new Button("B3"));
-		 
-		aUno = new Accordion();
-		aUno.getPanes().addAll(tpUno, tpDos, tpTres);
+	public MenuBar menuBar(){
 		
 		miUno = new MenuItem("Cerrar");
 		miUno.setOnAction(new EventHandler<ActionEvent>() {
@@ -54,27 +45,7 @@ public class BarraDeMenu extends Application implements EventHandler<Event>{
 		miCinco = new MenuItem("Acerca de...");
 		miCinco.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	pStageUno = new Stage();
-		    	
-		    	lblUno = new Label("Creado Por Brandon Castro");
-		    	lblUno.setStyle("-fx-background-color: #000000,"
-		    		+	"linear-gradient(#7ebcea, #2f4b8f),"
-		    		+	"linear-gradient(#426ab7, #263e75),"
-		    		+	"linear-gradient(#395cab, #223768);"
-		    		+	"-fx-background-insets: 0,1,2,3;"
-		    		+	"-fx-background-radius: 3,2,2,2;"
-		    		+	"-fx-padding: 12 30 12 30;"
-		    		+	"-fx-text-fill: white;"
-		    		+	"-fx-font-size: 12px;");
-		    	
-		    	pStageUno.setTitle("Acerca de...");
-		        pStageUno.setScene(new Scene(lblUno));
-		        pStageUno.show();
-		        pStageUno.setMaxHeight(150);
-		        pStageUno.setMaxWidth(215);
-		        pStageUno.setMinHeight(150);
-		        pStageUno.setMinWidth(215);
-		        pStageUno.setResizable(false);
+		    	AcercaDe.getInstancia().getAcercaDe().show();
 		    }
 		});
 		

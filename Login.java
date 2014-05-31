@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Scene;
@@ -21,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import org.brandon.utilidades.BarraDeMenu;
+import org.brandon.utilidades.AcercaDe;
 import org.brandon.manejadores.ManejadorUsuario;
 import org.brandon.db.Conexion;
 
@@ -35,6 +37,7 @@ public class Login extends Application implements EventHandler<Event>{
 	private PasswordField pfPass;
 	private ManejadorUsuario mUsuario;
 	private Conexion conexion;
+	private Button btnLogin;
 	
 	public static Login getInstancia(){
 		if(instancia==null){
@@ -54,7 +57,7 @@ public class Login extends Application implements EventHandler<Event>{
 		
 		primaryStage = new Stage();
 		primaryStage.setScene(primaryScene);
-		primaryStage.setTitle("Iniciar Sesion");
+		primaryStage.setTitle("Bienvenido");
 		primaryStage.show();
 		
 		return primaryStage;
@@ -63,7 +66,7 @@ public class Login extends Application implements EventHandler<Event>{
 		if(bpContainer==null){
 			bpContainer = new BorderPane();
 			bpContainer.setCenter(this.getGPContainerLogin());
-			bpContainer.setTop(BarraDeMenu.getInstancia().start());
+			bpContainer.setTop(BarraDeMenu.getInstancia().menuBar());
 		}
 		
 		return bpContainer;
@@ -73,6 +76,9 @@ public class Login extends Application implements EventHandler<Event>{
 			gpContainerLogin = new GridPane();
 			gpContainerLogin.setId("font");
 			
+			btnLogin = new Button("Iniciar Sesion");
+			btnLogin.addEventHandler(ActionEvent.ACTION, this);
+			btnLogin.setId("ButtonLogin");
 			lblNombre = new Label("Nombre: ");
 			lblPass = new Label("Clave: ");
 			tfNombre = new TextField();
@@ -82,14 +88,15 @@ public class Login extends Application implements EventHandler<Event>{
 			pfPass.setPromptText("Clave de usuario");
 			pfPass.addEventHandler(KeyEvent.KEY_RELEASED, this);
 			
-			lblLogin = new Label("Login");
+			lblLogin = new Label("Bienvenido");
 			lblLogin.setId("Logintext");
 			
-			gpContainerLogin.add(lblLogin, 		2, 1);
-			gpContainerLogin.add(lblNombre, 	4, 3);
-			gpContainerLogin.add(lblPass, 		4, 4);
-			gpContainerLogin.add(tfNombre, 		5, 3);
-			gpContainerLogin.add(pfPass, 		5, 4);
+			gpContainerLogin.add(lblLogin, 		0, 0, 2, 1);
+			gpContainerLogin.add(lblNombre, 	0, 1);
+			gpContainerLogin.add(lblPass, 		0, 2);
+			gpContainerLogin.add(tfNombre, 		1, 1);
+			gpContainerLogin.add(pfPass, 		1, 2);
+			gpContainerLogin.add(btnLogin,		2, 5);
 		}
 		
 		return gpContainerLogin;
@@ -101,26 +108,30 @@ public class Login extends Application implements EventHandler<Event>{
 		if(event instanceof KeyEvent){
 			KeyEvent keyEvent = (KeyEvent)event;
 			if(keyEvent.getCode()==KeyCode.ENTER){
-				if(event.getSource().equals(tfNombre) || event.getSource().equals(pfPass)){
+				if(event.getSource().equals(tfNombre) || event.getSource().equals(pfPass) || event.getSource().equals(btnLogin)){
 					if(!tfNombre.getText().trim().equals("") & !pfPass.getText().trim().equals("")){
 						if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
-							Stage dialog = new Stage();
-							Label lblBienvenido = new Label("Bienvenido!");
-							lblBienvenido.setId("Verificar");
-							dialog.setScene(new Scene(lblBienvenido));
-							dialog.initOwner(primaryStage);
-							dialog.initModality(Modality.WINDOW_MODAL);
-							dialog.show();
+							AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+							primaryStage.hide();
+							AcercaDe.getInstancia().getDialogTrue(primaryStage).hide();
+							Control.getInstancia().getControl().show();
 						
 						}else{
-							Stage dialog = new Stage();
-							Label lblVerifique = new Label("Verifique sus credenciales.");
-							lblVerifique.setId("Verificar");
-							dialog.setScene(new Scene(lblVerifique));
-							dialog.initOwner(primaryStage);
-							dialog.initModality(Modality.WINDOW_MODAL);
-							dialog.show();
+							AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
 						}
+					}
+				}
+			}
+		}else if(event instanceof ActionEvent){
+			if(event.getSource().equals(btnLogin)){
+				if(!tfNombre.getText().trim().equals("") & !pfPass.getText().trim().equals("")){
+					if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
+						AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+						primaryStage.hide();
+						AcercaDe.getInstancia().getDialogTrue(primaryStage).hide();
+						Control.getInstancia().getControl().show();
+					}else{
+						AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
 					}
 				}
 			}
