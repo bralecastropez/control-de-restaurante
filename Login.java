@@ -96,7 +96,7 @@ public class Login extends Application implements EventHandler<Event>{
 			gpContainerLogin.add(lblPass, 		0, 2);
 			gpContainerLogin.add(tfNombre, 		1, 1);
 			gpContainerLogin.add(pfPass, 		1, 2);
-			gpContainerLogin.add(btnLogin,		2, 5);
+			gpContainerLogin.add(btnLogin,		0, 3, 2, 2);
 		}
 		
 		return gpContainerLogin;
@@ -127,8 +127,8 @@ public class Login extends Application implements EventHandler<Event>{
 				if(!tfNombre.getText().trim().equals("") & !pfPass.getText().trim().equals("")){
 					if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
 						AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-						primaryStage.hide();
-						AcercaDe.getInstancia().getDialogTrue(primaryStage).hide();
+						primaryStage.close();
+						AcercaDe.getInstancia().getDialogTrue(primaryStage).close();
 						Control.getInstancia().getControl().show();
 					}else{
 						AcercaDe.getInstancia().getDialogFalse(primaryStage).show();

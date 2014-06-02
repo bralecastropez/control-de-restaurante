@@ -13,9 +13,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.event.ActionEvent;
+//import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.Event;
+import javafx.scene.input.MouseEvent;
 import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleListProperty;
 
@@ -27,6 +28,7 @@ import org.brandon.manejadores.ManejadorPedido;
 import org.brandon.db.Conexion;
 import org.brandon.beans.Cliente;
 import org.brandon.beans.Pedido;
+import org.brandon.sistema.Principal;
 
 public class Control extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
@@ -58,7 +60,6 @@ public class Control extends Application implements EventHandler<Event>{
 		primaryStage = new Stage();
 		primaryStage.setScene(primaryScene);
 		primaryStage.setTitle("Control de Restaurante");
-		primaryStage.show();
 		
 		return primaryStage;
 	}
@@ -81,13 +82,10 @@ public class Control extends Application implements EventHandler<Event>{
 	public ToolBar gettbToolbar(){
 		if(tbPrincipal==null){
 			btnAgregar = new Button("Agregar");
-			btnAgregar.addEventHandler(ActionEvent.ACTION, this);
 			btnEliminar = new Button("Eliminar");
-			btnEliminar.addEventHandler(ActionEvent.ACTION, this);
 			btnModificar = new Button("Modificar");
-			btnModificar.addEventHandler(ActionEvent.ACTION, this);
 			btnDesconectar = new Button("Desconectar");
-			btnDesconectar.addEventHandler(ActionEvent.ACTION, this);
+			btnDesconectar.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 	
 			tbPrincipal = new ToolBar();
 			tbPrincipal.getItems().add(btnAgregar);
@@ -178,14 +176,20 @@ public class Control extends Application implements EventHandler<Event>{
 		return instancia;
 	}
 	public void handle(Event event){
-		if(event instanceof ActionEvent){
-			if(event.getSource().equals(btnDesconectar)){
-				//Login.getInstancia().start().show();
-				primaryStage.hide();
-				
+		if(event instanceof MouseEvent){
+			if(event.getEventType()==MouseEvent.MOUSE_CLICKED){
+				if(event.getSource().equals(btnDesconectar)){
+					String [] args = new String[5];
+					primaryStage.close();
+					//this.main(args);
+				}
 			}
 		}
 	}
+	public static void main(String [] args){
+		Application.launch(Principal.class, args);
+	}
+	
 	public void start(Stage arg){
 	}
 }
