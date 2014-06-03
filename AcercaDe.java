@@ -1,6 +1,5 @@
 package org.brandon.utilidades;
 
-import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
 import javafx.scene.Scene;

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 
 public class ManejadorCliente{
 	private ObservableList<Cliente> listaDeClientes;
+	@SuppressWarnings("unused")
 	private Cliente clienteConectado;
 	private Conexion cnx;
 	public ManejadorCliente(Conexion conexion){

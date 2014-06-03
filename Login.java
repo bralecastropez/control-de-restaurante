@@ -13,13 +13,8 @@ import javafx.event.EventHandler;
 import javafx.event.Event;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Modality;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.ActionEvent;
-import javafx.scene.control.SelectionMode;
-import javafx.beans.property.SimpleListProperty;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.geometry.Pos;
 
 import org.brandon.utilidades.BarraDeMenu;
 import org.brandon.utilidades.AcercaDe;
@@ -56,6 +51,13 @@ public class Login extends Application implements EventHandler<Event>{
 		primaryScene.getStylesheets().add("Login.css");
 		
 		primaryStage = new Stage();
+		//Alto
+		primaryStage.setMaxHeight(350);
+		primaryStage.setMinHeight(350);
+		//Largo
+		primaryStage.setMaxWidth(250);
+		primaryStage.setMinWidth(250);
+		primaryStage.setResizable(false);
 		primaryStage.setScene(primaryScene);
 		primaryStage.setTitle("Bienvenido");
 		primaryStage.show();
@@ -67,6 +69,14 @@ public class Login extends Application implements EventHandler<Event>{
 			bpContainer = new BorderPane();
 			bpContainer.setCenter(this.getGPContainerLogin());
 			bpContainer.setTop(BarraDeMenu.getInstancia().menuBar());
+			bpContainer.setId("font");
+			btnLogin = new Button("Iniciar Sesion");
+			btnLogin.addEventHandler(ActionEvent.ACTION, this);
+			btnLogin.setAlignment(Pos.BOTTOM_RIGHT);
+			//btnLogin.setPrefSize(300, 50);
+			btnLogin.setId("ButtonLogin");
+			
+			bpContainer.setBottom(btnLogin);
 		}
 		
 		return bpContainer;
@@ -75,10 +85,8 @@ public class Login extends Application implements EventHandler<Event>{
 		if(gpContainerLogin==null){
 			gpContainerLogin = new GridPane();
 			gpContainerLogin.setId("font");
+			gpContainerLogin.setAlignment(Pos.CENTER);
 			
-			btnLogin = new Button("Iniciar Sesion");
-			btnLogin.addEventHandler(ActionEvent.ACTION, this);
-			btnLogin.setId("ButtonLogin");
 			lblNombre = new Label("Nombre: ");
 			lblPass = new Label("Clave: ");
 			tfNombre = new TextField();
@@ -89,6 +97,7 @@ public class Login extends Application implements EventHandler<Event>{
 			pfPass.addEventHandler(KeyEvent.KEY_RELEASED, this);
 			
 			lblLogin = new Label("Bienvenido");
+			lblLogin.setAlignment(Pos.TOP_CENTER);
 			lblLogin.setId("Logintext");
 			
 			gpContainerLogin.add(lblLogin, 		0, 0, 2, 1);
@@ -96,7 +105,6 @@ public class Login extends Application implements EventHandler<Event>{
 			gpContainerLogin.add(lblPass, 		0, 2);
 			gpContainerLogin.add(tfNombre, 		1, 1);
 			gpContainerLogin.add(pfPass, 		1, 2);
-			gpContainerLogin.add(btnLogin,		0, 3, 2, 2);
 		}
 		
 		return gpContainerLogin;

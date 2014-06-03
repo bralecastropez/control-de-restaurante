@@ -17,23 +17,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.EventHandler;
 import javafx.event.Event;
 import javafx.scene.input.MouseEvent;
-import javafx.collections.ObservableList;
-import javafx.beans.property.SimpleListProperty;
 
-import java.util.ArrayList;
-
-import org.brandon.utilidades.BarraDeMenu;
 import org.brandon.manejadores.ManejadorCliente;
 import org.brandon.manejadores.ManejadorPedido;
 import org.brandon.db.Conexion;
 import org.brandon.beans.Cliente;
 import org.brandon.beans.Pedido;
-import org.brandon.sistema.Principal;
+import org.brandon.utilidades.BarraDeMenu;
 
 public class Control extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
 	private Scene primaryScene;
 	private BorderPane bpPrincipal, bpToolbar,bpTables;
+	@SuppressWarnings("unused")
 	private GridPane gpContainerTables;
 	public static Control instancia;
 	private TabPane tpPrincipal;
@@ -49,7 +45,6 @@ public class Control extends Application implements EventHandler<Event>{
 	
 	public Stage getControl(){
 		conexion = new Conexion();
-		this.primaryStage=primaryStage;
 
 		this.setMCliente(new ManejadorCliente(conexion));
 		this.setMPedido(new ManejadorPedido(conexion));
@@ -130,6 +125,7 @@ public class Control extends Application implements EventHandler<Event>{
 	public void setMPedido(ManejadorPedido mPedido){
 		this.mPedido=mPedido;
 	}
+	@SuppressWarnings("unchecked")
 	public TableView<Cliente> getContentCliente(){
 		if(tvClientes==null){
 			tvClientes = new TableView<Cliente>();
@@ -148,6 +144,7 @@ public class Control extends Application implements EventHandler<Event>{
 		}
 		return tvClientes;
 	}
+	@SuppressWarnings("unchecked")
 	public TableView<Pedido> getContentPedidos(){
 		if(tvPedidos==null){
 			tvPedidos = new TableView<Pedido>();
@@ -179,15 +176,10 @@ public class Control extends Application implements EventHandler<Event>{
 		if(event instanceof MouseEvent){
 			if(event.getEventType()==MouseEvent.MOUSE_CLICKED){
 				if(event.getSource().equals(btnDesconectar)){
-					String [] args = new String[5];
 					primaryStage.close();
-					//this.main(args);
 				}
 			}
 		}
-	}
-	public static void main(String [] args){
-		Application.launch(Principal.class, args);
 	}
 	
 	public void start(Stage arg){

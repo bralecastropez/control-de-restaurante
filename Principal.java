@@ -2,11 +2,11 @@ package org.brandon.sistema;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
 
 import org.brandon.ui.Login;
 
 public class Principal extends Application{
+	@SuppressWarnings("unused")
 	private Stage primaryStage;
 	public void start(Stage primaryStage){
 		this.primaryStage=primaryStage;

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 
 public class ManejadorUsuario{
 	private ObservableList<Usuario> listaDeUsuarios;
+	@SuppressWarnings("unused")
 	private Usuario usuarioConectado;
 	private Conexion cnx;
 	public ManejadorUsuario(Conexion conexion){
