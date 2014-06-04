@@ -9,6 +9,10 @@ import javafx.collections.ObservableList;
 import org.brandon.db.Conexion;
 import org.brandon.beans.Pedido;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class ManejadorPedido{
 	private Conexion cnx;
 	private ObservableList<Pedido> listaDePedidos;

@@ -9,6 +9,10 @@ import javafx.collections.ObservableList;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class ManejadorCliente{
 	private ObservableList<Cliente> listaDeClientes;
 	@SuppressWarnings("unused")

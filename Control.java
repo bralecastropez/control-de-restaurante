@@ -24,6 +24,11 @@ import org.brandon.db.Conexion;
 import org.brandon.beans.Cliente;
 import org.brandon.beans.Pedido;
 import org.brandon.utilidades.BarraDeMenu;
+import org.brandon.sistema.ModuloChef;
+
+/**
+*	@author Brandon Castro
+*/
 
 public class Control extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
@@ -93,7 +98,8 @@ public class Control extends Application implements EventHandler<Event>{
 	public BorderPane getbpTables(){
 		if(bpTables==null){
 			bpTables = new BorderPane();
-			bpTables.setTop(this.getTabPrincipal());
+			//bpTables.setTop(this.getTabPrincipal());
+			bpTables.setBottom(ModuloChef.getInstancia().getTBPrincipalChef());
 		}
 		return bpTables;
 	}
@@ -132,8 +138,9 @@ public class Control extends Application implements EventHandler<Event>{
 
 			tvClientes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-			TableColumn<Cliente, String> columnaNombre = new TableColumn<Cliente, String>("NOMBRE COMPLETO");
+			TableColumn<Cliente, String> columnaNombre = new TableColumn<Cliente, String>("Nombre del Cliente");
 			columnaNombre.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nombre"));
+			columnaNombre.setMinWidth(250);
 
 			TableColumn<Cliente, Integer> columnaIdCliente = new TableColumn<Cliente, Integer>("NIT");
 			columnaIdCliente.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("idCliente"));
@@ -144,7 +151,7 @@ public class Control extends Application implements EventHandler<Event>{
 		}
 		return tvClientes;
 	}
-	@SuppressWarnings("unchecked")
+	
 	public TableView<Pedido> getContentPedidos(){
 		if(tvPedidos==null){
 			tvPedidos = new TableView<Pedido>();

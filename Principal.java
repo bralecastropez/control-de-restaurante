@@ -5,8 +5,12 @@ import javafx.stage.Stage;
 
 import org.brandon.ui.Login;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class Principal extends Application{
-	@SuppressWarnings("unused")
+
 	private Stage primaryStage;
 	public void start(Stage primaryStage){
 		this.primaryStage=primaryStage;

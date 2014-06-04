@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 
 import org.brandon.utilidades.AcercaDe;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class BarraDeMenu extends Application implements EventHandler<Event>{
 
 	private static BarraDeMenu instancia;

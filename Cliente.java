@@ -5,6 +5,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class Cliente{
 	private IntegerProperty idCliente;
 	private StringProperty nombre;
@@ -18,12 +22,16 @@ public class Cliente{
 		this.idCliente = new SimpleIntegerProperty(idCliente);
 		this.nombre = new SimpleStringProperty(nombre);
 	}
+	
 	public int getIdCliente(){
 		return idCliente.get();
 	}
 	public void setIdCliente(int idCliente){
 		this.idCliente.set(idCliente);
 	}
+	/**
+	* @return El idCliente del Cliente.
+	*/
 	public IntegerProperty idClienteProperty(){
 		return idCliente;
 	}
@@ -34,6 +42,9 @@ public class Cliente{
 	public void setNombre(String nombre){
 		this.nombre.set(nombre);
 	}
+	/**
+	* @return El nombre del Cliente.
+	*/
 	public StringProperty nombreProperty(){
 		return nombre;
 	}

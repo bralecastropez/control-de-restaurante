@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.Statement;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class Conexion{
 	private Connection cnx;
 	private Statement stm;
@@ -16,9 +20,9 @@ public class Conexion{
 			//cargamos la conexion a partir del driver
 			
 			//Driver Kinal
-			//cnx = DriverManager.getConnection("jdbc:sqlserver://LABI23-17;databaseName=dbRestauranteProyecto", "SQLServerBrowser", "brandon");
+			cnx = DriverManager.getConnection("jdbc:sqlserver://LABI23-17;databaseName=dbRestauranteProyecto", "SQLServerBrowser", "brandon");
 			//Driver Casa
-			cnx = DriverManager.getConnection("jdbc:sqlserver://BRANDON-PC\\SQLEXPRESS;databaseName=dbRestauranteProyecto", "brandon", "brandon");
+			//cnx = DriverManager.getConnection("jdbc:sqlserver://BRANDON-PC\\SQLEXPRESS;databaseName=dbRestauranteProyecto", "brandon", "brandon");
 			//creamos el statement a partir de la conexion para ejecutar consultas y sentencias en sql
 			stm = cnx.createStatement();
 		}catch(ClassNotFoundException cl){

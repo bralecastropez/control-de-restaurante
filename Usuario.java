@@ -5,6 +5,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class Usuario{
 	private IntegerProperty idUsuario, idRol;
 	private StringProperty nombre, pass;

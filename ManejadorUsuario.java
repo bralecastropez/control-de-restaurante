@@ -9,6 +9,10 @@ import javafx.collections.ObservableList;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class ManejadorUsuario{
 	private ObservableList<Usuario> listaDeUsuarios;
 	@SuppressWarnings("unused")

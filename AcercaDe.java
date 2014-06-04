@@ -4,6 +4,9 @@ import javafx.stage.Stage;
 import javafx.stage.Modality;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+/**
+*	@author Brandon Castro
+*/
 
 public class AcercaDe{
 	private Stage acercaDe, dialogTrue, dialogFalse;

@@ -5,6 +5,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class Pedido{
 	private IntegerProperty idPedido, idFactura;
 	private StringProperty estado;

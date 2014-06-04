@@ -21,6 +21,10 @@ import org.brandon.utilidades.AcercaDe;
 import org.brandon.manejadores.ManejadorUsuario;
 import org.brandon.db.Conexion;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class Login extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
 	private Scene primaryScene;
