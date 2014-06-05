@@ -41,6 +41,10 @@ public class ModuloChef implements EventHandler<Event>{
 	private Label lblEstado;
 	private Button sendEstado;
 	
+	
+	/**
+	* @return El TabPane para el Tab de ModuloChef
+	*/
 	public TabPane getTBPrincipalChef(){
 		if(tpPrincipalChef==null){
 			conexion = new Conexion();
@@ -54,6 +58,9 @@ public class ModuloChef implements EventHandler<Event>{
 	public void setMPedido(ManejadorPedido mPedido){
 		this.mPedido=mPedido;
 	}
+	/**
+	* @return La tabla para modificar los pedidos.
+	*/
 	public Tab getTabChef(){
 		if(tEstado==null){
 			tEstado = new Tab("Modulo Chef");
@@ -61,16 +68,20 @@ public class ModuloChef implements EventHandler<Event>{
 		}
 		return tEstado;
 	}
+	/**
+	* @return BorderPane para el contenido de la tabla.
+	*/
 	public BorderPane getContentChef(){
 		if(gpModuloChef==null){
 			gpModuloChef = new BorderPane();
 			gpModuloChef.setTop(this.getToolbarChef());
 			gpModuloChef.setCenter(this.getContentPedidos());
-			
 		}
 		return gpModuloChef;
 	}
-	
+	/**
+	* @return Herramientas para modificar las tablas.
+	*/
 	public ToolBar getToolbarChef(){
 		if(tbPrincipalChef==null){
 			tbPrincipalChef = new ToolBar();
@@ -87,6 +98,9 @@ public class ModuloChef implements EventHandler<Event>{
 		}
 		return tbPrincipalChef;
 	}
+	/**
+	* @return Tabla que muestra todos los pedidos.
+	*/
 	public TableView<Pedido> getContentPedidos(){
 		if(tvPedidos==null){
 			tvPedidos = new TableView<Pedido>();
@@ -108,6 +122,9 @@ public class ModuloChef implements EventHandler<Event>{
 		}
 		return tvPedidos;
 	}
+	/**
+	* @return Tabla que contiene el modulo crud.
+	*/
 	public Tab getTabCRUD(){
 		if(tCRUD==null){
 			tCRUD = new Tab("Cambio de Estado");
@@ -115,6 +132,9 @@ public class ModuloChef implements EventHandler<Event>{
 		}
 		return tCRUD;
 	}
+	/**
+	* @return Contenido para modificar el Pedido.
+	*/
 	public GridPane getContentCRUD(){
 		if(gpContentCRUD==null){
 			gpContentCRUD = new GridPane();
@@ -136,6 +156,9 @@ public class ModuloChef implements EventHandler<Event>{
 	public void setPedido(Pedido pedido){
 		tfEstado.setText(pedido.getEstado());
 	}
+	/**
+	* @return Si los datos son validos
+	*/
 	public boolean validarDatos(){
 		return !tfEstado.getText().trim().equals("");
 	}
@@ -177,6 +200,9 @@ public class ModuloChef implements EventHandler<Event>{
 			}
 		}
 	}
+	/**
+	* @return Instancia de la Clase ModuloChef
+	*/
 	public static ModuloChef getInstancia(){
 		if(instancia==null){
 			instancia = new ModuloChef();

@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 
 public class ManejadorUsuario{
 	private ObservableList<Usuario> listaDeUsuarios;
-	@SuppressWarnings("unused")
+	private int IdRol;
 	private Usuario usuarioConectado;
 	private Conexion cnx;
 	public ManejadorUsuario(Conexion conexion){
@@ -41,6 +41,20 @@ public class ManejadorUsuario{
 	}
 	public void desconectar(){
 		this.usuarioConectado=null;
+	}
+	public int getRol(String nombre, String pass){
+		ResultSet resultado = cnx.ejecutarConsulta("SELECT idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");
+		try{
+			if(resultado!=null){
+				if(resultado.next()){
+					IdRol = resultado.getInt("idRol");
+					return IdRol;
+				}
+			}
+		}catch(SQLException sql){
+			sql.printStackTrace();
+		}
+		return IdRol;
 	}
 	public boolean conectar(String nombre, String pass){
 		ResultSet resultado = cnx.ejecutarConsulta("SELECT idUsuario, nombre, pass, idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");

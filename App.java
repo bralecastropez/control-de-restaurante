@@ -2,6 +2,8 @@ package org.brandon.sistema;
 
 import javafx.application.Application;
 
+import org.brandon.ui.Principal;
+
 /**
 *	@author Brandon Castro
 */
