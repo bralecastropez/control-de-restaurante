@@ -99,7 +99,7 @@ public class Control extends Application implements EventHandler<Event>{
 		if(bpTables==null){
 			bpTables = new BorderPane();
 			//bpTables.setTop(this.getTabPrincipal());
-			bpTables.setBottom(ModuloChef.getInstancia().getTBPrincipalChef());
+			//bpTables.setBottom(ModuloChef.getInstancia().getTBPrincipalChef());
 		}
 		return bpTables;
 	}
@@ -131,7 +131,7 @@ public class Control extends Application implements EventHandler<Event>{
 	public void setMPedido(ManejadorPedido mPedido){
 		this.mPedido=mPedido;
 	}
-	@SuppressWarnings("unchecked")
+	
 	public TableView<Cliente> getContentCliente(){
 		if(tvClientes==null){
 			tvClientes = new TableView<Cliente>();

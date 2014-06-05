@@ -6,14 +6,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Scene;
 import javafx.event.EventHandler;
 import javafx.event.Event;
+import javafx.event.ActionEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
-import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 
 import org.brandon.utilidades.BarraDeMenu;
@@ -31,15 +33,21 @@ import org.brandon.db.Conexion;
 public class Principal extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
 	private Scene primaryScene;
-	private GridPane gpContainerLogin;
 	private BorderPane bpContainerPrincipal;
 	private static Principal instancia;
+	private ManejadorUsuario mUsuario;
+	private Conexion conexion;
+	//Contenedor de Tablas
+	private TabPane tpPrincipalTablas;
+
+	//Iniciar Sesion
+	private BorderPane bpLoginPrincipal;
+	private Tab tbLogin;
+	private Button btnLogin;
 	private TextField tfNombre;
 	private Label lblNombre, lblPass,lblLogin;
 	private PasswordField pfPass;
-	private ManejadorUsuario mUsuario;
-	private Conexion conexion;
-	private Button btnLogin;
+	private GridPane gpContainerLogin;
 	
 	
 	/**
@@ -63,12 +71,13 @@ public class Principal extends Application implements EventHandler<Event>{
 		
 		primaryStage = new Stage();
 		//Alto
-		primaryStage.setMaxHeight(350);
+		//primaryStage.setMaxHeight(350);
 		primaryStage.setMinHeight(350);
 		//Largo
-		primaryStage.setMaxWidth(250);
+		//primaryStage.setMaxWidth(250);
 		primaryStage.setMinWidth(250);
-		primaryStage.setResizable(false);
+		//primaryStage.setResizable(false);
+		primaryStage.sizeToScene(); 
 		primaryStage.setScene(primaryScene);
 		primaryStage.setTitle("Bienvenido");
 		primaryStage.show();
@@ -77,17 +86,38 @@ public class Principal extends Application implements EventHandler<Event>{
 		if(bpContainerPrincipal==null){
 			bpContainerPrincipal = new BorderPane();
 			bpContainerPrincipal.setTop(BarraDeMenu.getInstancia().menuBar());
-			bpContainerPrincipal.setCenter(this.getContainerLogin());
-			bpContainerPrincipal.setId("font");
-			
-			btnLogin = new Button("Iniciar Sesion");
-			btnLogin.addEventHandler(ActionEvent.ACTION, this);
-			btnLogin.setAlignment(Pos.BOTTOM_RIGHT);
-			btnLogin.setId("ButtonLogin");
-			
-			bpContainerPrincipal.setBottom(btnLogin);
+			bpContainerPrincipal.setCenter(this.getTabPanePrincipal());
 		}
 		return bpContainerPrincipal;
+	}
+	public TabPane getTabPanePrincipal(){
+		if(tpPrincipalTablas==null){
+			tpPrincipalTablas = new TabPane();
+			tpPrincipalTablas.getTabs().add(this.getTabLogin());
+		}
+		return tpPrincipalTablas;
+	}
+	public Tab getTabLogin(){
+		if(tbLogin==null){
+			tbLogin = new Tab("Iniciar Sesion");
+			tbLogin.setContent(this.getLogin());
+		}
+		return tbLogin;
+	}
+	public BorderPane getLogin(){
+		if(bpLoginPrincipal==null){
+			bpLoginPrincipal = new BorderPane();
+			bpLoginPrincipal.setId("font");
+			btnLogin = new Button("Iniciar Sesion");
+			btnLogin.addEventHandler(ActionEvent.ACTION, this);
+			btnLogin.setAlignment(Pos.BOTTOM_CENTER);
+			btnLogin.setId("ButtonLogin");
+			
+			bpLoginPrincipal.setCenter(this.getContainerLogin());
+			bpLoginPrincipal.setBottom(btnLogin);
+			
+		}
+		return bpLoginPrincipal;
 	}
 	public GridPane getContainerLogin(){
 		if(gpContainerLogin==null){
@@ -131,25 +161,29 @@ public class Principal extends Application implements EventHandler<Event>{
 						if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
 							switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
 							case 1:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+								AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+								tpPrincipalTablas.getTabs().add(ModuloChef.getInstancia().getTabPrincipal());
 								tfNombre.clear();
 								pfPass.clear();
-								System.out.println("Bienvenido Administrador");
+								
 								break;
 							case 2:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+								AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
 								System.out.println("Bienvenido Chef");
 								break;
 							case 3:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+								AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
 								System.out.println("Bienvenido Empleado");
 								break;
 							default:
 								System.out.println("Rol no concuerda");
+								tfNombre.clear();
+								pfPass.clear();
 								break;
 							}
 						}else{

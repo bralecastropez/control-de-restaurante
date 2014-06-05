@@ -32,7 +32,7 @@ public class ModuloChef implements EventHandler<Event>{
 	private Conexion conexion;
 	private TableView<Pedido> tvPedidos;
 	private ManejadorPedido mPedido;
-	private Tab tEstado, tCRUD;
+	private Tab tEstado, tCRUD, tbPrincipal;
 	private BorderPane gpModuloChef;
 	//Cambiar Pedido
 	private Pedido pedidoModificar;
@@ -41,7 +41,13 @@ public class ModuloChef implements EventHandler<Event>{
 	private Label lblEstado;
 	private Button sendEstado;
 	
-	
+	public Tab getTabPrincipal(){
+		if(tbPrincipal==null){
+			tbPrincipal = new Tab("Modulo Chef");
+			tbPrincipal.setContent(this.getTBPrincipalChef());
+		}
+		return tbPrincipal;
+	}
 	/**
 	* @return El TabPane para el Tab de ModuloChef
 	*/
@@ -63,7 +69,7 @@ public class ModuloChef implements EventHandler<Event>{
 	*/
 	public Tab getTabChef(){
 		if(tEstado==null){
-			tEstado = new Tab("Modulo Chef");
+			tEstado = new Tab("Pedidos");
 			tEstado.setContent(this.getContentChef());
 		}
 		return tEstado;
@@ -76,6 +82,7 @@ public class ModuloChef implements EventHandler<Event>{
 			gpModuloChef = new BorderPane();
 			gpModuloChef.setTop(this.getToolbarChef());
 			gpModuloChef.setCenter(this.getContentPedidos());
+			gpModuloChef.getStylesheets().add("Login.css");
 		}
 		return gpModuloChef;
 	}
