@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Scene;
@@ -18,7 +21,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.geometry.Pos;
 
-import org.brandon.utilidades.BarraDeMenu;
 import org.brandon.utilidades.AcercaDe;
 import org.brandon.sistema.ModuloChef;
 import org.brandon.sistema.ModuloAdministrador;
@@ -34,12 +36,11 @@ public class Principal extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
 	private Scene primaryScene;
 	private BorderPane bpContainerPrincipal;
-	private static Principal instancia;
+	private Button btnDesconectar;
 	private ManejadorUsuario mUsuario;
 	private Conexion conexion;
 	//Contenedor de Tablas
 	private TabPane tpPrincipalTablas;
-
 	//Iniciar Sesion
 	private BorderPane bpLoginPrincipal;
 	private Tab tbLogin;
@@ -48,17 +49,12 @@ public class Principal extends Application implements EventHandler<Event>{
 	private Label lblNombre, lblPass,lblLogin;
 	private PasswordField pfPass;
 	private GridPane gpContainerLogin;
+	//Barra de Menu
+	private MenuBar mbUno;
+	private Menu mUno, mDos, mTres;
+	@SuppressWarnings("unused")
+	private MenuItem miUno,miDos,miTres,miCuatro,miCinco, miDesconectar;
 	
-	
-	/**
-	* @return La instancia de la Clase Principal
-	*/
-	public static Principal getInstancia(){
-		if(instancia==null){
-			instancia = new Principal();
-		}
-		return instancia;
-	}
 	public void start(Stage primaryStage){
 		this.primaryStage=primaryStage;
 		
@@ -66,26 +62,37 @@ public class Principal extends Application implements EventHandler<Event>{
 	
 		this.setMUsuario(new ManejadorUsuario(conexion));
 		
-		primaryScene = new Scene(this.getContenedorPrincipal());
-		primaryScene.getStylesheets().add("Login.css");
 		
 		primaryStage = new Stage();
 		//Alto
 		//primaryStage.setMaxHeight(350);
-		primaryStage.setMinHeight(350);
+		primaryStage.setMinHeight(600);
 		//Largo
 		//primaryStage.setMaxWidth(250);
-		primaryStage.setMinWidth(250);
+		primaryStage.setMinWidth(600);
 		//primaryStage.setResizable(false);
-		primaryStage.sizeToScene(); 
-		primaryStage.setScene(primaryScene);
+		//primaryStage.sizeToScene(); 
+		primaryStage.setScene(this.primaryScene());
 		primaryStage.setTitle("Bienvenido");
 		primaryStage.show();
+	}
+	public Scene primaryScene(){
+		if(primaryScene==null){
+			primaryScene = new Scene(this.getContenedorPrincipal());
+			primaryScene.getStylesheets().add("Login.css");
+		}
+		return primaryScene;
 	}
 	public BorderPane getContenedorPrincipal(){
 		if(bpContainerPrincipal==null){
 			bpContainerPrincipal = new BorderPane();
-			bpContainerPrincipal.setTop(BarraDeMenu.getInstancia().menuBar());
+			lblLogin = new Label("Bienvenido");
+			lblLogin.setAlignment(Pos.TOP_CENTER);
+			lblLogin.setId("Logintext");
+			btnDesconectar = new Button("Cerrar Sesion");
+			btnDesconectar.addEventHandler(ActionEvent.ACTION, this);
+			bpContainerPrincipal.setTop(this.menuBar(primaryScene));
+			bpContainerPrincipal.setRight(lblLogin);
 			bpContainerPrincipal.setCenter(this.getTabPanePrincipal());
 		}
 		return bpContainerPrincipal;
@@ -101,6 +108,7 @@ public class Principal extends Application implements EventHandler<Event>{
 		if(tbLogin==null){
 			tbLogin = new Tab("Iniciar Sesion");
 			tbLogin.setContent(this.getLogin());
+			tbLogin.setClosable(false);
 		}
 		return tbLogin;
 	}
@@ -136,11 +144,6 @@ public class Principal extends Application implements EventHandler<Event>{
 			pfPass.addEventHandler(KeyEvent.KEY_RELEASED, this);
 			pfPass.clear();
 			
-			lblLogin = new Label("Bienvenido");
-			lblLogin.setAlignment(Pos.TOP_CENTER);
-			lblLogin.setId("Logintext");
-			
-			gpContainerLogin.add(lblLogin, 		0, 0, 2, 1);
 			gpContainerLogin.add(lblNombre, 	0, 1);
 			gpContainerLogin.add(lblPass, 		0, 2);
 			gpContainerLogin.add(tfNombre, 		1, 1);
@@ -160,31 +163,38 @@ public class Principal extends Application implements EventHandler<Event>{
 					if(!tfNombre.getText().trim().equals("") & !pfPass.getText().trim().equals("")){
 						if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
 							switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
-							case 1:
-								AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
-								tpPrincipalTablas.getTabs().add(ModuloChef.getInstancia().getTabPrincipal());
-								tfNombre.clear();
-								pfPass.clear();
-								
-								break;
-							case 2:
-								AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-								tfNombre.clear();
-								pfPass.clear();
-								System.out.println("Bienvenido Chef");
-								break;
-							case 3:
-								AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-								tfNombre.clear();
-								pfPass.clear();
-								System.out.println("Bienvenido Empleado");
-								break;
-							default:
-								System.out.println("Rol no concuerda");
-								tfNombre.clear();
-								pfPass.clear();
-								break;
+								//Administrador
+								case 1:
+									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									tfNombre.clear();
+									pfPass.clear();
+									bpContainerPrincipal.setRight(btnDesconectar);
+									break;
+								//Chef
+								case 2:
+									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									tfNombre.clear();
+									pfPass.clear();
+									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+									tpPrincipalTablas.getTabs().add(ModuloChef.getInstancia().getTabPrincipalChef());
+									bpContainerPrincipal.setRight(btnDesconectar);
+									break;
+								//Empleado
+								case 3:
+									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									tfNombre.clear();
+									pfPass.clear();
+									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+									tpPrincipalTablas.getTabs().add(ModuloEmpleado.getInstancia().getTabPrincipalEmpleado());
+									bpContainerPrincipal.setRight(btnDesconectar);
+									break;
+								//Rol inexistente
+								default:
+									System.out.println("Rol no concuerda");
+									tfNombre.clear();
+									pfPass.clear();
+									bpContainerPrincipal.setCenter(btnDesconectar);
+									break;
 							}
 						}else{
 							AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
@@ -199,27 +209,38 @@ public class Principal extends Application implements EventHandler<Event>{
 				if(!tfNombre.getText().trim().equals("") & !pfPass.getText().trim().equals("")){
 					if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
 						switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
-							case 1:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-								tfNombre.clear();
-								pfPass.clear();
-								System.out.println("Bienvenido Administrador");
-								break;
-							case 2:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-								tfNombre.clear();
-								pfPass.clear();
-								System.out.println("Bienvenido Chef");
-								break;
-							case 3:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-								tfNombre.clear();
-								pfPass.clear();
-								System.out.println("Bienvenido Empleado");
-								break;
-							default:
-								System.out.println("Rol no concuerda");
-								break;
+								//Administrador
+								case 1:
+									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									tfNombre.clear();
+									pfPass.clear();
+									bpContainerPrincipal.setRight(btnDesconectar);
+									break;
+								//Chef
+								case 2:
+									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									tfNombre.clear();
+									pfPass.clear();
+									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+									tpPrincipalTablas.getTabs().add(ModuloChef.getInstancia().getTabPrincipalChef());
+									bpContainerPrincipal.setRight(btnDesconectar);
+									break;
+								//Empleado
+								case 3:
+									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									tfNombre.clear();
+									pfPass.clear();
+									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+									tpPrincipalTablas.getTabs().add(ModuloEmpleado.getInstancia().getTabPrincipalEmpleado());
+									bpContainerPrincipal.setRight(btnDesconectar);
+									break;
+								//Rol inexistente
+								default:
+									System.out.println("Rol no concuerda");
+									tfNombre.clear();
+									pfPass.clear();
+									bpContainerPrincipal.setRight(btnDesconectar);
+									break;
 							}
 					}else{
 						AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
@@ -227,7 +248,66 @@ public class Principal extends Application implements EventHandler<Event>{
 						pfPass.clear();
 					}
 				}
+			}else if(event.getSource().equals(btnDesconectar)){
+				getTabPanePrincipal().getTabs().clear();
+				bpContainerPrincipal.setRight(lblLogin);
+				getTabPanePrincipal().getTabs().add(getTabLogin());
 			}
 		}
+	}
+	/**
+	*	@return Barra De Menu
+	*	@param primaryScene Para cambiar el Tema
+	*/
+	public MenuBar menuBar(Scene primaryScene){
+		
+		miUno = new MenuItem("Cerrar");
+		miUno.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		        System.exit(0);
+		    }
+		});
+		miDesconectar = new MenuItem("Cerrar Sesion");
+		miDesconectar.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+				getTabPanePrincipal().getTabs().clear();
+				bpContainerPrincipal.setRight(lblLogin);
+				getTabPanePrincipal().getTabs().add(getTabLogin());
+		    }
+		});
+		miDos = new MenuItem("Tema Light");
+		miDos.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	primaryScene.getStylesheets().add("Login.css");
+		    }
+		});
+		miTres = new MenuItem("Tema Dark");
+		miTres.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	primaryScene.getStylesheets().add("Principal.css");
+		    }
+		});
+		miCuatro = new MenuItem("Ayuda");
+		miCinco = new MenuItem("Acerca de...");
+		miCinco.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	AcercaDe.getInstancia().getAcercaDe().show();
+		    }
+		});
+		
+		mUno= new Menu("Aplicacion");
+		mUno.getItems().add(miDesconectar);
+		mUno.getItems().add(miUno);
+		mDos= new Menu("Herramientas");
+		mDos.getItems().add(miDos);
+		mDos.getItems().add(miTres);
+		mTres= new Menu("Ayuda");
+		mTres.getItems().add(miCinco);
+		mTres.getItems().add(miCuatro);
+		
+		mbUno = new MenuBar();
+		mbUno.getMenus().addAll(mUno,mDos,mTres);
+				
+		return mbUno;
 	}
 }

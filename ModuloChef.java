@@ -24,11 +24,15 @@ import org.brandon.beans.Pedido;
 import org.brandon.manejadores.ManejadorPedido;
 import org.brandon.db.Conexion;
 
+/**
+*	@author Brandon Castro
+*/
+
 public class ModuloChef implements EventHandler<Event>{
 	private static ModuloChef instancia;
 	private TabPane tpPrincipalChef;
 	private ToolBar tbPrincipalChef;
-	private Button btnEstado, btnDesconectar;
+	private Button btnEstado;
 	private Conexion conexion;
 	private TableView<Pedido> tvPedidos;
 	private ManejadorPedido mPedido;
@@ -41,10 +45,14 @@ public class ModuloChef implements EventHandler<Event>{
 	private Label lblEstado;
 	private Button sendEstado;
 	
-	public Tab getTabPrincipal(){
+	/**
+	* @return El Tab de ModuloChef
+	*/
+	public Tab getTabPrincipalChef(){
 		if(tbPrincipal==null){
 			tbPrincipal = new Tab("Modulo Chef");
 			tbPrincipal.setContent(this.getTBPrincipalChef());
+			tbPrincipal.setClosable(false);
 		}
 		return tbPrincipal;
 	}
@@ -71,6 +79,7 @@ public class ModuloChef implements EventHandler<Event>{
 		if(tEstado==null){
 			tEstado = new Tab("Pedidos");
 			tEstado.setContent(this.getContentChef());
+			tEstado.setClosable(false);
 		}
 		return tEstado;
 	}
@@ -95,12 +104,8 @@ public class ModuloChef implements EventHandler<Event>{
 			btnEstado = new Button("Cambiar Estado");
 			btnEstado.setId("ModuloChef");
 			btnEstado.addEventHandler(ActionEvent.ACTION, this);
-			btnDesconectar = new Button("Cerrar Sesion");
-			btnDesconectar.setId("ModuloChef");
-			btnDesconectar.addEventHandler(ActionEvent.ACTION, this);
 			
 			tbPrincipalChef.getItems().add(btnEstado);
-			tbPrincipalChef.getItems().add(btnDesconectar);
 			
 		}
 		return tbPrincipalChef;
@@ -124,7 +129,7 @@ public class ModuloChef implements EventHandler<Event>{
 			columnaIdFactura.setCellValueFactory(new PropertyValueFactory<Pedido, Integer>("idFactura"));
 
 			tvPedidos.getColumns().setAll(columnaEstado, columnaIdPedido, columnaIdFactura);
-
+			tvPedidos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 			tvPedidos.setItems(mPedido.getListaDePedidos());
 		}
 		return tvPedidos;
@@ -196,14 +201,14 @@ public class ModuloChef implements EventHandler<Event>{
 				tfEstado.clear();
 			}else if (event.getSource().equals(sendEstado)){
 				if(validarDatos()){
-						Pedido pedido = new Pedido(0, 0, tfEstado.getText());
-						pedido.setIdFactura(pedidoModificar.getIdFactura());
-						pedido.setIdPedido(pedidoModificar.getIdPedido());
-						mPedido.modificarPedido(pedido);
-						
-						tpPrincipalChef.getTabs().remove(getTabCRUD());
-						tfEstado.clear();
-					}
+					Pedido pedido = new Pedido(0, 0, tfEstado.getText());
+					pedido.setIdFactura(pedidoModificar.getIdFactura());
+					pedido.setIdPedido(pedidoModificar.getIdPedido());
+					mPedido.modificarPedido(pedido);
+					
+					tpPrincipalChef.getTabs().remove(getTabCRUD());
+					tfEstado.clear();
+				}
 			}
 		}
 	}
