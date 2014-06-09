@@ -7,7 +7,6 @@ import org.brandon.ui.Principal;
 /**
 *	@author Brandon Castro
 */
-
 public class App{
 	public static void main(String args[]){
 		Application.launch(Principal.class, args);

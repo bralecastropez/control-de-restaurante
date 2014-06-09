@@ -18,6 +18,10 @@ public class ManejadorCliente{
 	@SuppressWarnings("unused")
 	private Cliente clienteConectado;
 	private Conexion cnx;
+	
+	/**
+	 * @param conexion La conexion de la base de datos
+	 */
 	public ManejadorCliente(Conexion conexion){
 		listaDeClientes = FXCollections.observableArrayList();
 		cnx = conexion;
@@ -36,6 +40,9 @@ public class ManejadorCliente{
 			sql.printStackTrace();
 		}
 	}
+	/**
+	 * @return La lista de clientes en la base de datos
+	 */
 	public ObservableList<Cliente> getListaDeClientes(){
 		return this.listaDeClientes;
 	}

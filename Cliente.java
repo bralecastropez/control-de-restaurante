@@ -35,7 +35,6 @@ public class Cliente{
 	public IntegerProperty idClienteProperty(){
 		return idCliente;
 	}
-
 	public String getNombre(){
 		return nombre.get();
 	}

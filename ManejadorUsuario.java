@@ -16,8 +16,13 @@ import java.sql.ResultSet;
 public class ManejadorUsuario{
 	private ObservableList<Usuario> listaDeUsuarios;
 	private int IdRol;
+	@SuppressWarnings("unused")
 	private Usuario usuarioConectado;
 	private Conexion cnx;
+	
+	/**
+	 * @param conexion La clase conexion para poder obtener la lista de Usuario
+	 */
 	public ManejadorUsuario(Conexion conexion){
 		listaDeUsuarios = FXCollections.observableArrayList();
 		cnx = conexion;
@@ -36,12 +41,21 @@ public class ManejadorUsuario{
 			sql.printStackTrace();
 		}
 	}
+	/**
+	 * @return La lista de usuarios
+	 */
 	public ObservableList<Usuario> getListaDeUsuarios(){
 		return this.listaDeUsuarios;
 	}
 	public void desconectar(){
 		this.usuarioConectado=null;
 	}
+	/**
+	 * 
+	 * @param nombre Nombre del usuario para poder obtener su rol
+	 * @param pass	Contraseña del usuario para poder obtener su rol
+	 * @return	El rol de usuario
+	 */
 	public int getRol(String nombre, String pass){
 		ResultSet resultado = cnx.ejecutarConsulta("SELECT idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");
 		try{
@@ -56,6 +70,11 @@ public class ManejadorUsuario{
 		}
 		return IdRol;
 	}
+	/**
+	 * @param nombre Nombre del usuario
+	 * @param pass	Contraseña del Usuario
+	 * @return	El usuario se ha conectado
+	 */
 	public boolean conectar(String nombre, String pass){
 		ResultSet resultado = cnx.ejecutarConsulta("SELECT idUsuario, nombre, pass, idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");
 		try{

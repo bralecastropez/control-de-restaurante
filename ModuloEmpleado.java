@@ -1,5 +1,6 @@
 package org.brandon.sistema;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.Button;
@@ -12,6 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.Event;
+
+import java.util.ArrayList;
 
 import org.brandon.db.Conexion;
 import org.brandon.manejadores.ManejadorPedido;
@@ -29,10 +32,12 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	private Conexion conexion;
 	private TableView<Pedido> tvPedidos;
 	private ManejadorPedido mPedido;
-	private static ModuloEmpleado instancia;
 	//Agregar,Eliminar y Editar Pedido
+	//FALSE=AGREGAR, TRUE=MODIFICAR
+	@SuppressWarnings("unused")
+	private boolean estadoMantenimiento;
 	private Button btnAgregar, btnEditar, btnEliminar;
-	private Tab tAgregar, tEliminar, tModificar, tPedidos;
+	private Tab tAgregar, tModificar, tPedidos;
 	
 	/**
 	*	@return Tabla Principal del empleado
@@ -91,16 +96,6 @@ public class ModuloEmpleado implements EventHandler<Event>{
 		return tModificar;
 	}
 	/**
-	*	@return Tabla de Pedidos para Eliminar
-	*/
-	public Tab getTabPedidosEliminar(){
-		if(tEliminar==null){
-			tEliminar = new Tab("Pedidos");
-			tEliminar.setClosable(false);
-		}
-		return tEliminar;
-	}
-	/**
 	*	@return BorderPane Pedidos
 	*/
 	public BorderPane getBorderPanePedidos(){
@@ -114,6 +109,7 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	/**
 	* @return Tabla que muestra todos los pedidos.
 	*/
+	@SuppressWarnings("unchecked")
 	public TableView<Pedido> getContentPedidos(){
 		if(tvPedidos==null){
 			tvPedidos = new TableView<Pedido>();
@@ -156,15 +152,18 @@ public class ModuloEmpleado implements EventHandler<Event>{
 		return tbPrincipal;
 	}
 	public void handle(Event event){
-		
-	}
-	/**
-	*	@return La instancia del metodo.
-	*/
-	public static ModuloEmpleado getInstancia(){
-		if(instancia==null){
-			instancia = new ModuloEmpleado();
+		if(event instanceof ActionEvent){
+			if(event.getSource().equals(btnAgregar)){
+				
+			}else if(event.getSource().equals(btnEliminar)){
+				ObservableList<Pedido> pedidos = getContentPedidos().getSelectionModel().getSelectedItems();
+				ArrayList<Pedido> listaNoObservable = new ArrayList<Pedido>(pedidos);
+				for(Pedido pedido : listaNoObservable){
+					mPedido.eliminarPedido(pedido);
+				}
+			}else if(event.getSource().equals(btnEditar)){
+			
+			}
 		}
-		return instancia;
 	}
 }

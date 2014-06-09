@@ -31,6 +31,11 @@ public class Conexion{
 			sql.printStackTrace();
 		}
 	}
+	/**
+	 * 
+	 * @param sentencia Para las consultas
+	 * @return para Ingresar datos o eliminar
+	 */
 	public boolean ejecutarSentencia(String sentencia){
 		boolean resultado = false;
 		try{
@@ -40,6 +45,11 @@ public class Conexion{
 		}
 		return resultado;
 	}
+	/**
+	 * 
+	 * @param consulta Para ejecutar las consultas de sql server
+	 * @return Los valores que devuelven las consultas
+	 */
 	public ResultSet ejecutarConsulta(String consulta){
 		ResultSet resultado = null;
 		try{

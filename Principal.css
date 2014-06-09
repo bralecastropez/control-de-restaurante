@@ -23,7 +23,7 @@
     -fx-opacity: 1;
 }
 
-.table-view {
+/*.table-view {
     -fx-base: #1d1d1d;
     -fx-control-inner-background: #1d1d1d;
     -fx-background-color: #1d1d1d;
@@ -31,6 +31,7 @@
     -fx-table-header-border-color: transparent;
     -fx-padding: 5;
 }
+*/
 
 .table-view .column-header-background {
     -fx-background-color: transparent;
@@ -70,7 +71,6 @@
 
 .menu-bar {
     -fx-background-color: derive(#1d1d1d,20%);
-    -fx-selection-bar: derive(-fx-background,-7%);
 }
 
 .menu-bar .label {

@@ -20,6 +20,8 @@ import javafx.event.Event;
 import javafx.collections.ObservableList;
 
 
+
+
 import org.brandon.beans.Pedido;
 import org.brandon.manejadores.ManejadorPedido;
 import org.brandon.db.Conexion;
@@ -28,8 +30,9 @@ import org.brandon.db.Conexion;
 *	@author Brandon Castro
 */
 
+@SuppressWarnings("unused")
 public class ModuloChef implements EventHandler<Event>{
-	private static ModuloChef instancia;
+
 	private TabPane tpPrincipalChef;
 	private ToolBar tbPrincipalChef;
 	private Button btnEstado;
@@ -113,6 +116,7 @@ public class ModuloChef implements EventHandler<Event>{
 	/**
 	* @return Tabla que muestra todos los pedidos.
 	*/
+	@SuppressWarnings("unchecked")
 	public TableView<Pedido> getContentPedidos(){
 		if(tvPedidos==null){
 			tvPedidos = new TableView<Pedido>();
@@ -211,14 +215,5 @@ public class ModuloChef implements EventHandler<Event>{
 				}
 			}
 		}
-	}
-	/**
-	* @return Instancia de la Clase ModuloChef
-	*/
-	public static ModuloChef getInstancia(){
-		if(instancia==null){
-			instancia = new ModuloChef();
-		}
-		return instancia;
 	}
 }

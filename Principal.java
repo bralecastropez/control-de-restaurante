@@ -2,6 +2,7 @@ package org.brandon.ui;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
@@ -11,6 +12,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Scene;
@@ -32,12 +34,15 @@ import org.brandon.db.Conexion;
 *	@author Brandon Castro
 */
 
+@SuppressWarnings("unused")
 public class Principal extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
 	private Scene primaryScene;
 	private BorderPane bpContainerPrincipal;
 	private Button btnDesconectar;
 	private ManejadorUsuario mUsuario;
+	private ModuloEmpleado mEmpleado;
+	private ModuloChef mChef;
 	private Conexion conexion;
 	//Contenedor de Tablas
 	private TabPane tpPrincipalTablas;
@@ -52,7 +57,6 @@ public class Principal extends Application implements EventHandler<Event>{
 	//Barra de Menu
 	private MenuBar mbUno;
 	private Menu mUno, mDos, mTres;
-	@SuppressWarnings("unused")
 	private MenuItem miUno,miDos,miTres,miCuatro,miCinco, miDesconectar;
 	
 	public void start(Stage primaryStage){
@@ -61,7 +65,11 @@ public class Principal extends Application implements EventHandler<Event>{
 		conexion = new Conexion();
 	
 		this.setMUsuario(new ManejadorUsuario(conexion));
+		this.setMEmpleado(new ModuloEmpleado());
+		this.setMChef(new ModuloChef());
 		
+		primaryScene = new Scene(this.getContenedorPrincipal());
+		primaryScene.getStylesheets().add("Login.css");		
 		
 		primaryStage = new Stage();
 		//Alto
@@ -72,17 +80,13 @@ public class Principal extends Application implements EventHandler<Event>{
 		primaryStage.setMinWidth(600);
 		//primaryStage.setResizable(false);
 		//primaryStage.sizeToScene(); 
-		primaryStage.setScene(this.primaryScene());
+		primaryStage.setScene(primaryScene);
 		primaryStage.setTitle("Bienvenido");
 		primaryStage.show();
 	}
-	public Scene primaryScene(){
-		if(primaryScene==null){
-			primaryScene = new Scene(this.getContenedorPrincipal());
-			primaryScene.getStylesheets().add("Login.css");
-		}
-		return primaryScene;
-	}
+	/**
+	 * @return Contenedor Principal
+	 */
 	public BorderPane getContenedorPrincipal(){
 		if(bpContainerPrincipal==null){
 			bpContainerPrincipal = new BorderPane();
@@ -97,6 +101,9 @@ public class Principal extends Application implements EventHandler<Event>{
 		}
 		return bpContainerPrincipal;
 	}
+	/**
+	 * @return Contenedor principal de tablas
+	 */
 	public TabPane getTabPanePrincipal(){
 		if(tpPrincipalTablas==null){
 			tpPrincipalTablas = new TabPane();
@@ -104,6 +111,9 @@ public class Principal extends Application implements EventHandler<Event>{
 		}
 		return tpPrincipalTablas;
 	}
+	/**
+	 * @return Tabla de logeo
+	 */
 	public Tab getTabLogin(){
 		if(tbLogin==null){
 			tbLogin = new Tab("Iniciar Sesion");
@@ -112,6 +122,9 @@ public class Principal extends Application implements EventHandler<Event>{
 		}
 		return tbLogin;
 	}
+	/**
+	 * @return El borderPane para el inicio de sesion
+	 */
 	public BorderPane getLogin(){
 		if(bpLoginPrincipal==null){
 			bpLoginPrincipal = new BorderPane();
@@ -120,6 +133,7 @@ public class Principal extends Application implements EventHandler<Event>{
 			btnLogin.addEventHandler(ActionEvent.ACTION, this);
 			btnLogin.setAlignment(Pos.BOTTOM_CENTER);
 			btnLogin.setId("ButtonLogin");
+			btnLogin.setTooltip(new Tooltip("Iniciar Sesion"));
 			
 			bpLoginPrincipal.setCenter(this.getContainerLogin());
 			bpLoginPrincipal.setBottom(btnLogin);
@@ -127,6 +141,9 @@ public class Principal extends Application implements EventHandler<Event>{
 		}
 		return bpLoginPrincipal;
 	}
+	/**
+	 * @return GridPane para el inicio de sesion
+	 */
 	public GridPane getContainerLogin(){
 		if(gpContainerLogin==null){
 			gpContainerLogin = new GridPane();
@@ -152,9 +169,82 @@ public class Principal extends Application implements EventHandler<Event>{
 		
 		return gpContainerLogin;
 	}
+	/**
+	 * @param mUsuario Aplicando injeccion de Dependencias para el Manejador del Usuario
+	 */
 	public void setMUsuario(ManejadorUsuario mUsuario){
 		this.mUsuario = mUsuario;
 	}
+	/**
+	 * @param mEmpleado Aplicando injeccion de dependencias para el Modulo del Empleado
+	 */
+	public void setMEmpleado(ModuloEmpleado mEmpleado){
+		this.mEmpleado=mEmpleado;
+	}
+	/** 
+	 * @param mChef aplicando injeccion de dependencia para el  Modulo Chef
+	 */
+	public void setMChef(ModuloChef mChef){
+		this.mChef=mChef;
+	}
+	/**
+	*	@return Barra De Menu
+	*	@param primaryScene Para cambiar el Tema
+	*/
+	public MenuBar menuBar(Scene primaryScene){
+		
+		miUno = new MenuItem("Cerrar");
+		miUno.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		        System.exit(0);
+		    }
+		});
+		miDesconectar = new MenuItem("Cerrar Sesion");
+		miDesconectar.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+				getTabPanePrincipal().getTabs().clear();
+				bpContainerPrincipal.setRight(lblLogin);
+				getTabPanePrincipal().getTabs().add(getTabLogin());
+		    }
+		});
+		miDos = new MenuItem("Tema Light");
+		miDos.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	primaryScene.getStylesheets().add("Login.css");
+		    }
+		});
+		miTres = new MenuItem("Tema Dark");
+		miTres.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	primaryScene.getStylesheets().add("Principal.css");
+		    }
+		});
+		miCuatro = new 	MenuItem("Ayuda");
+		miCinco = new MenuItem("Acerca de...");
+		miCinco.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	AcercaDe.getInstancia().getAcercaDe().show();
+		    }
+		});
+		
+		mUno= new Menu("Aplicacion");
+		mUno.getItems().add(miDesconectar);
+		mUno.getItems().add(miUno);
+		mDos= new Menu("Herramientas");
+		mDos.getItems().add(miDos);
+		mDos.getItems().add(miTres);
+		mTres= new Menu("Ayuda");
+		mTres.getItems().add(miCinco);
+		mTres.getItems().add(miCuatro);
+		
+		mbUno = new MenuBar();
+		mbUno.getMenus().addAll(mUno,mDos,mTres);
+
+		return mbUno;
+	}
+	/**
+	 * @param event para manipular los eventos de los botones
+	 */
 	public void handle(Event event){
 		if(event instanceof KeyEvent){
 			KeyEvent keyEvent = (KeyEvent)event;
@@ -176,7 +266,7 @@ public class Principal extends Application implements EventHandler<Event>{
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
-									tpPrincipalTablas.getTabs().add(ModuloChef.getInstancia().getTabPrincipalChef());
+									tpPrincipalTablas.getTabs().add(mChef.getTabPrincipalChef());
 									bpContainerPrincipal.setRight(btnDesconectar);
 									break;
 								//Empleado
@@ -185,7 +275,7 @@ public class Principal extends Application implements EventHandler<Event>{
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
-									tpPrincipalTablas.getTabs().add(ModuloEmpleado.getInstancia().getTabPrincipalEmpleado());
+									tpPrincipalTablas.getTabs().add(mEmpleado.getTabPrincipalEmpleado());
 									bpContainerPrincipal.setRight(btnDesconectar);
 									break;
 								//Rol inexistente
@@ -222,7 +312,7 @@ public class Principal extends Application implements EventHandler<Event>{
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
-									tpPrincipalTablas.getTabs().add(ModuloChef.getInstancia().getTabPrincipalChef());
+									tpPrincipalTablas.getTabs().add(mChef.getTabPrincipalChef());
 									bpContainerPrincipal.setRight(btnDesconectar);
 									break;
 								//Empleado
@@ -231,15 +321,14 @@ public class Principal extends Application implements EventHandler<Event>{
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
-									tpPrincipalTablas.getTabs().add(ModuloEmpleado.getInstancia().getTabPrincipalEmpleado());
+									tpPrincipalTablas.getTabs().add(mEmpleado.getTabPrincipalEmpleado());
 									bpContainerPrincipal.setRight(btnDesconectar);
 									break;
 								//Rol inexistente
 								default:
-									System.out.println("Rol no concuerda");
-									tfNombre.clear();
-									pfPass.clear();
-									bpContainerPrincipal.setRight(btnDesconectar);
+									getTabPanePrincipal().getTabs().clear();
+									bpContainerPrincipal.setRight(lblLogin);
+									getTabPanePrincipal().getTabs().add(getTabLogin());
 									break;
 							}
 					}else{
@@ -252,62 +341,10 @@ public class Principal extends Application implements EventHandler<Event>{
 				getTabPanePrincipal().getTabs().clear();
 				bpContainerPrincipal.setRight(lblLogin);
 				getTabPanePrincipal().getTabs().add(getTabLogin());
+			}else if(event.getSource().equals(miUno)){
+				System.exit(0);
 			}
 		}
 	}
-	/**
-	*	@return Barra De Menu
-	*	@param primaryScene Para cambiar el Tema
-	*/
-	public MenuBar menuBar(Scene primaryScene){
-		
-		miUno = new MenuItem("Cerrar");
-		miUno.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent t) {
-		        System.exit(0);
-		    }
-		});
-		miDesconectar = new MenuItem("Cerrar Sesion");
-		miDesconectar.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent t) {
-				getTabPanePrincipal().getTabs().clear();
-				bpContainerPrincipal.setRight(lblLogin);
-				getTabPanePrincipal().getTabs().add(getTabLogin());
-		    }
-		});
-		miDos = new MenuItem("Tema Light");
-		miDos.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent t) {
-		    	primaryScene.getStylesheets().add("Login.css");
-		    }
-		});
-		miTres = new MenuItem("Tema Dark");
-		miTres.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent t) {
-		    	primaryScene.getStylesheets().add("Principal.css");
-		    }
-		});
-		miCuatro = new MenuItem("Ayuda");
-		miCinco = new MenuItem("Acerca de...");
-		miCinco.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent t) {
-		    	AcercaDe.getInstancia().getAcercaDe().show();
-		    }
-		});
-		
-		mUno= new Menu("Aplicacion");
-		mUno.getItems().add(miDesconectar);
-		mUno.getItems().add(miUno);
-		mDos= new Menu("Herramientas");
-		mDos.getItems().add(miDos);
-		mDos.getItems().add(miTres);
-		mTres= new Menu("Ayuda");
-		mTres.getItems().add(miCinco);
-		mTres.getItems().add(miCuatro);
-		
-		mbUno = new MenuBar();
-		mbUno.getMenus().addAll(mUno,mDos,mTres);
-				
-		return mbUno;
-	}
+	
 }
