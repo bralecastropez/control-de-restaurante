@@ -1,6 +1,7 @@
 package org.brandon.sistema;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.Button;
@@ -15,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;	
+import javafx.scene.layout.VBox;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.Event;
@@ -41,11 +43,16 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	private TableView<Pedido> tvPedidos;
 	private ManejadorPedido mPedido;
 	private Button btnActualizarLista;
+	//Comprar Pedidos
+	private VBox pago, pagosTarjeta;
+	private TextField tfTarjeta;
+	private Button pagoTarjeta, pagoEfectivo, btnTarjeta;
 	//Agregar,Eliminar y Editar Pedido
 	private boolean estadoMantenimiento;
 	private Button btnAgregar, btnEditar, btnEliminar;
+
 	private Tab tAgregar, tModificar, tPedidos;
-	private BorderPane bpAgregar;
+	private BorderPane bpAgregar, bpModificarPrincipal;
 	private GridPane bpModificar;
 	private TextField tfEstado;
 	private Button btnAgregarPedido,btnEstadoCancelado,btnEstadoPagado,btnEstadoEspera;
@@ -110,9 +117,41 @@ public class ModuloEmpleado implements EventHandler<Event>{
 		return tModificar;
 	}
 	/**
+	*	@return BorderPane para Pagos y Pedidos
+	*/
+	public BorderPane getContentModificar(){
+		if(bpModificarPrincipal==null){
+			bpModificarPrincipal = new BorderPane();
+			bpModificarPrincipal.setTop(this.getGPContentModificar());
+			bpModificarPrincipal.setLeft(null);
+			bpModificarPrincipal.setCenter(null);
+			pagoTarjeta 	= new Button("Tarjeta de Credito");
+			pagoTarjeta.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			pagoTarjeta.setAlignment(Pos.CENTER);
+			pagoEfectivo 	= new Button("Pago en Efectivo  ");
+			pagoEfectivo.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			pagoEfectivo.setAlignment(Pos.CENTER);
+			pago 			= new VBox();
+			pagosTarjeta	= new VBox();
+			tfTarjeta		= new TextField();
+			tfTarjeta.setPromptText("Ingrese su tarjeta de Credito");
+			tfTarjeta.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfTarjeta.setAlignment(Pos.CENTER);
+			btnTarjeta		= new Button("Pagar");
+			btnTarjeta.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			btnTarjeta.setAlignment(Pos.CENTER);
+			pagosTarjeta.getChildren().addAll(tfTarjeta, btnTarjeta);
+			
+			
+			pago.getChildren().add(pagoTarjeta);
+			pago.getChildren().add(pagoEfectivo);
+		}
+		return bpModificarPrincipal;
+	}
+	/**
 	*	@return Contenido para Modifcar Pedidos
 	*/
-	public GridPane getContentModificar(){
+	public GridPane getGPContentModificar(){
 		if(bpModificar==null){
 			bpModificar = new GridPane();
 			btnEstadoCancelado = new Button("Cancelado");
@@ -204,6 +243,16 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	public boolean validarDatos(){
 		return !tfEstado.getText().trim().equals("");
 	}
+	public boolean validarTarjeta(){
+		return !tfTarjeta.getText().trim().equals("");
+	}
+	public void cerrarPago(){
+		getTabPanePrincipal().getTabs().remove(getTabPedidosModificar());
+		bpModificarPrincipal.setTop(this.getGPContentModificar());
+		bpModificarPrincipal.setLeft(null);
+		bpModificarPrincipal.setCenter(null);
+		tfTarjeta.clear();
+	}
 	public void handle(Event event){
 		if(event instanceof KeyEvent){
 			KeyEvent keyEvent = (KeyEvent)event;
@@ -213,6 +262,16 @@ public class ModuloEmpleado implements EventHandler<Event>{
 						Pedido pedido = new Pedido(0, tfEstado.getText());
 						mPedido.agregarPedido(pedido);
 						getTabPanePrincipal().getTabs().remove(getTabPedidosAgregar());
+					}
+				}else if(event.getSource().equals(tfTarjeta)){
+					if(validarTarjeta()){
+						if(tfTarjeta.getLength()==16){
+							this.cerrarPago();
+						}else{
+							Label lblTarjeta = new Label("Tarjeta Ingresada no valida");
+							tfTarjeta.setStyle("-fx-background-color: #0093EF;");
+							bpModificarPrincipal.setTop(lblTarjeta);
+						}
 					}
 				}
 			}
@@ -247,8 +306,8 @@ public class ModuloEmpleado implements EventHandler<Event>{
 				}else if(event.getSource().equals(btnEstadoPagado)){
 					Pedido pedido = new Pedido(pedidoModificar.getIdPedido(), "pagado");
 					mPedido.modificarPedido(pedido);
-					
-					getTabPanePrincipal().getTabs().remove(getTabPedidosModificar());
+					bpModificarPrincipal.setLeft(pago);
+					bpModificarPrincipal.setTop(null);
 				}else if(event.getSource().equals(btnAgregarPedido)){
 					if(validarDatos()){
 						Pedido pedido = new Pedido(0, tfEstado.getText());
@@ -257,6 +316,14 @@ public class ModuloEmpleado implements EventHandler<Event>{
 					}
 				}else if(event.getSource().equals(btnActualizarLista)){
 					mPedido.actualizarListaDePedidos();
+				}else if(event.getSource().equals(pagoTarjeta)){
+					bpModificarPrincipal.setLeft(null);
+					bpModificarPrincipal.setTop(null);
+					bpModificarPrincipal.setCenter(pagosTarjeta);
+				}else if(event.getSource().equals(pagoEfectivo)){
+					this.cerrarPago();
+				}else if(event.getSource().equals(btnTarjeta)){
+					this.cerrarPago();
 				}
 			}
 		}

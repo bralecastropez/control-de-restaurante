@@ -42,6 +42,7 @@ public class Principal extends Application implements EventHandler<Event>{
 	private Button btnDesconectar;
 	private ManejadorUsuario mUsuario;
 	private ModuloEmpleado mEmpleado;
+	private ModuloAdministrador mAdministrador;
 	private ModuloChef mChef;
 	private Conexion conexion;
 	//Contenedor de Tablas
@@ -67,6 +68,7 @@ public class Principal extends Application implements EventHandler<Event>{
 		this.setMUsuario(new ManejadorUsuario(conexion));
 		this.setMEmpleado(new ModuloEmpleado());
 		this.setMChef(new ModuloChef());
+		this.setMAdministrador(new ModuloAdministrador());
 		
 		primaryScene = new Scene(this.getContenedorPrincipal());
 		primaryScene.getStylesheets().add("Login.css");		
@@ -188,6 +190,12 @@ public class Principal extends Application implements EventHandler<Event>{
 		this.mChef=mChef;
 	}
 	/**
+	*	@param mAdministrador Aplicando inyeccion de dependencias para el Modulo Administrador
+	*/
+	public void setMAdministrador(ModuloAdministrador mAdministrador){
+		this.mAdministrador=mAdministrador;
+	}
+	/**
 	*	@return Barra De Menu
 	*	@param primaryScene Para cambiar el Tema
 	*/
@@ -258,6 +266,8 @@ public class Principal extends Application implements EventHandler<Event>{
 									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
+									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+									tpPrincipalTablas.getTabs().add(mAdministrador.getTabPrincipalAdministrador());
 									bpContainerPrincipal.setRight(btnDesconectar);
 									break;
 								//Chef
@@ -299,38 +309,41 @@ public class Principal extends Application implements EventHandler<Event>{
 				if(!tfNombre.getText().trim().equals("") & !pfPass.getText().trim().equals("")){
 					if(mUsuario.conectar(tfNombre.getText(), pfPass.getText())){
 						switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
-								//Administrador
-								case 1:
-									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-									tfNombre.clear();
-									pfPass.clear();
-									bpContainerPrincipal.setRight(btnDesconectar);
-									break;
-								//Chef
-								case 2:
-									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-									tfNombre.clear();
-									pfPass.clear();
-									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
-									tpPrincipalTablas.getTabs().add(mChef.getTabPrincipalChef());
-									bpContainerPrincipal.setRight(btnDesconectar);
-									break;
-								//Empleado
-								case 3:
-									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
-									tfNombre.clear();
-									pfPass.clear();
-									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
-									tpPrincipalTablas.getTabs().add(mEmpleado.getTabPrincipalEmpleado());
-									bpContainerPrincipal.setRight(btnDesconectar);
-									break;
-								//Rol inexistente
-								default:
-									getTabPanePrincipal().getTabs().clear();
-									bpContainerPrincipal.setRight(lblLogin);
-									getTabPanePrincipal().getTabs().add(getTabLogin());
-									break;
-							}
+							//Administrador
+							case 1:
+								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+								tfNombre.clear();
+								pfPass.clear();
+								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+								tpPrincipalTablas.getTabs().add(mAdministrador.getTabPrincipalAdministrador());
+								bpContainerPrincipal.setRight(btnDesconectar);
+								break;
+							//Chef
+							case 2:
+								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+								tfNombre.clear();
+								pfPass.clear();
+								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+								tpPrincipalTablas.getTabs().add(mChef.getTabPrincipalChef());
+								bpContainerPrincipal.setRight(btnDesconectar);
+								break;
+							//Empleado
+							case 3:
+								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+								tfNombre.clear();
+								pfPass.clear();
+								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
+								tpPrincipalTablas.getTabs().add(mEmpleado.getTabPrincipalEmpleado());
+								bpContainerPrincipal.setRight(btnDesconectar);
+								break;
+							//Rol inexistente
+							default:
+								System.out.println("Rol no concuerda");
+								tfNombre.clear();
+								pfPass.clear();
+								bpContainerPrincipal.setCenter(btnDesconectar);
+								break;
+						}
 					}else{
 						//AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
 						tfNombre.clear();
