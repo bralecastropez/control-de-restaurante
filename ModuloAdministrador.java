@@ -11,9 +11,9 @@ import org.brandon.db.Conexion;
 *	@author Brandon Castro
 */
 public class ModuloAdministrador{
-	private Tab tPrincipalAdministrador, tUsuarios, tIngredientes;
+	private Tab tPrincipalAdministrador, tUsuarios, tIngredientes, tBebidas, tComidas;
 	private TabPane tpPrincipalAdministrador;
-	private BorderPane bpUsuarios, bpIngredientes;
+	private BorderPane bpUsuarios, bpIngredientes, bpBebidas, bpComidas;
 	private ManejadorUsuario mUsuario;
 	private Conexion conexion;
 	/**
@@ -40,6 +40,8 @@ public class ModuloAdministrador{
 			tpPrincipalAdministrador = new TabPane();
 			tpPrincipalAdministrador.getTabs().add(this.getTabUsuarios());
 			tpPrincipalAdministrador.getTabs().add(this.getTabIngredientes());
+			tpPrincipalAdministrador.getTabs().add(this.getTabBebidas());
+			tpPrincipalAdministrador.getTabs().add(this.getTabComidas());
 			tpPrincipalAdministrador.getStylesheets().add("Login.css");
 		}
 		return tpPrincipalAdministrador;
@@ -83,6 +85,46 @@ public class ModuloAdministrador{
 			bpIngredientes = new BorderPane();
 		}
 		return bpIngredientes;
+	}
+	/**
+	*	@return Tabla de Comidas
+	*/
+	public Tab getTabComidas(){
+		if(tComidas==null){
+			tComidas = new Tab("Comida");
+			tComidas.setContent(this.getBorderPaneComidas());
+			tComidas.setClosable(false);
+		}
+		return tComidas;
+	}
+	/**
+	*	@return BorderPane de Comidas
+	*/
+	public BorderPane getBorderPaneComidas(){
+		if(bpComidas==null){
+			bpComidas = new BorderPane();
+		}
+		return bpComidas;
+	}
+	/**
+	*	@return Tabla de Bebidas
+	*/
+	public Tab getTabBebidas(){
+		if(tBebidas==null){
+			tBebidas = new Tab("Bebidas");
+			tBebidas.setContent(this.getBorderPaneBebidas());
+			tBebidas.setClosable(false);
+		}
+		return tBebidas;
+	}
+	/**
+	*	@return BorderPane de Bebidas
+	*/
+	public BorderPane getBorderPaneBebidas(){
+		if(bpBebidas==null){
+			bpBebidas = new BorderPane();
+		}
+		return bpBebidas;
 	}
 	
 }
