@@ -109,3 +109,28 @@
     -fx-alignment: CENTER;
     -fx-text-fill: #96b946;
 }*/
+.custom-text-field {
+    -fx-background-color:
+        #FFFFFF,
+        #FFFFFF;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 0, 0;
+ }
+
+.custom-text-field:focused {
+    -fx-background-color:
+        #0093EF,
+        #FFFFFF;
+}
+
+.custom-text-field:hover {
+    -fx-background-color:
+        #909090,
+        #FFFFFF;
+}
+
+.custom-text-field:focused:hover {
+    -fx-background-color:
+        #0093EF,
+        #FFFFFF;
+}
