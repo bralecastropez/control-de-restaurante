@@ -10,17 +10,15 @@ import javafx.beans.property.SimpleStringProperty;
 */
 
 public class Pedido{
-	private IntegerProperty idPedido, idFactura;
+	private IntegerProperty idPedido;
 	private StringProperty estado;
 
 	public Pedido(){
 		idPedido = new SimpleIntegerProperty();
-		idFactura = new SimpleIntegerProperty();
 		estado = new SimpleStringProperty("");
 	}
-	public Pedido(int idPedido, int idFactura, String estado){
+	public Pedido(int idPedido, String estado){
 		this.idPedido = new SimpleIntegerProperty(idPedido);
-		this.idFactura = new SimpleIntegerProperty(idFactura);
 		this.estado = new SimpleStringProperty(estado);
 	}
 	//Metodos del Pedido
@@ -36,20 +34,6 @@ public class Pedido{
 	public IntegerProperty idPedidoProperty(){
 		return idPedido;
 	}
-	
-	//Obtener idFactura
-	public int getIdFactura(){
-		return idFactura.get();
-	}
-	//Mandar idFactura
-	public void setIdFactura(int idFactura){
-		this.idFactura.set(idFactura);
-	}
-	//Devolver idFactura
-	public IntegerProperty idFacturaProperty(){
-		return idFactura;
-	}
-	
 	//Obtener Estado
 	public String getEstado(){
 		return estado.get();

@@ -255,14 +255,14 @@ public class Principal extends Application implements EventHandler<Event>{
 							switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
 								//Administrador
 								case 1:
-									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									bpContainerPrincipal.setRight(btnDesconectar);
 									break;
 								//Chef
 								case 2:
-									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
@@ -271,7 +271,7 @@ public class Principal extends Application implements EventHandler<Event>{
 									break;
 								//Empleado
 								case 3:
-									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
@@ -287,7 +287,7 @@ public class Principal extends Application implements EventHandler<Event>{
 									break;
 							}
 						}else{
-							AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
+							//AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
 							tfNombre.clear();
 							pfPass.clear();
 						}
@@ -301,14 +301,14 @@ public class Principal extends Application implements EventHandler<Event>{
 						switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
 								//Administrador
 								case 1:
-									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									bpContainerPrincipal.setRight(btnDesconectar);
 									break;
 								//Chef
 								case 2:
-									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
@@ -317,7 +317,7 @@ public class Principal extends Application implements EventHandler<Event>{
 									break;
 								//Empleado
 								case 3:
-									AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
+									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
@@ -332,7 +332,7 @@ public class Principal extends Application implements EventHandler<Event>{
 									break;
 							}
 					}else{
-						AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
+						//AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
 						tfNombre.clear();
 						pfPass.clear();
 					}

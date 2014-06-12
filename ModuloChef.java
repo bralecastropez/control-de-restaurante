@@ -14,13 +14,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.Event;
 import javafx.collections.ObservableList;
-
-
-
 
 import org.brandon.beans.Pedido;
 import org.brandon.manejadores.ManejadorPedido;
@@ -35,15 +33,15 @@ public class ModuloChef implements EventHandler<Event>{
 
 	private TabPane tpPrincipalChef;
 	private ToolBar tbPrincipalChef;
-	private Button btnEstado;
+	private Button btnEstado, btnActualizarLista;
 	private Conexion conexion;
 	private TableView<Pedido> tvPedidos;
 	private ManejadorPedido mPedido;
 	private Tab tEstado, tCRUD, tbPrincipal;
-	private BorderPane gpModuloChef;
+	private BorderPane gpModuloChef;	
 	//Cambiar Pedido
 	private Pedido pedidoModificar;
-	private GridPane gpContentCRUD;
+	private BorderPane gpContentCRUD;
 	private TextField tfEstado;
 	private Label lblEstado;
 	private Button sendEstado;
@@ -107,8 +105,11 @@ public class ModuloChef implements EventHandler<Event>{
 			btnEstado = new Button("Cambiar Estado");
 			btnEstado.setId("ModuloChef");
 			btnEstado.addEventHandler(ActionEvent.ACTION, this);
+			btnActualizarLista = new Button("Actualizar");
+			btnActualizarLista.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			
 			tbPrincipalChef.getItems().add(btnEstado);
+			tbPrincipalChef.getItems().add(btnActualizarLista);
 			
 		}
 		return tbPrincipalChef;
@@ -129,10 +130,7 @@ public class ModuloChef implements EventHandler<Event>{
 			TableColumn<Pedido, Integer> columnaIdPedido = new TableColumn<Pedido, Integer>("Numero de Pedido");
 			columnaIdPedido.setCellValueFactory(new PropertyValueFactory<Pedido, Integer>("idPedido"));
 
-			TableColumn<Pedido, Integer> columnaIdFactura = new TableColumn<Pedido, Integer>("Factura");
-			columnaIdFactura.setCellValueFactory(new PropertyValueFactory<Pedido, Integer>("idFactura"));
-
-			tvPedidos.getColumns().setAll(columnaEstado, columnaIdPedido, columnaIdFactura);
+			tvPedidos.getColumns().setAll(columnaEstado, columnaIdPedido);
 			tvPedidos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 			tvPedidos.setItems(mPedido.getListaDePedidos());
 		}
@@ -151,67 +149,39 @@ public class ModuloChef implements EventHandler<Event>{
 	/**
 	* @return Contenido para modificar el Pedido.
 	*/
-	public GridPane getContentCRUD(){
+	public BorderPane getContentCRUD(){
 		if(gpContentCRUD==null){
-			gpContentCRUD = new GridPane();
+			gpContentCRUD = new BorderPane();
 			
-			sendEstado = new Button("Cambiar");
+			sendEstado = new Button("Entregado");
+			sendEstado.setId("Estado");
 			sendEstado.addEventHandler(ActionEvent.ACTION, this);
-			tfEstado = new TextField();
-			tfEstado.addEventHandler(KeyEvent.KEY_RELEASED, this);
-			lblEstado = new Label("Estado: ");
-
-			gpContentCRUD.add(lblEstado, 		0,0);
-			gpContentCRUD.add(tfEstado, 		1,0);
-			gpContentCRUD.add(sendEstado,		2,0 );
-			
-			tfEstado.clear();
+			gpContentCRUD.setCenter(sendEstado);
 		}
 		return gpContentCRUD;
-	}
-	public void setPedido(Pedido pedido){
-		tfEstado.setText(pedido.getEstado());
 	}
 	/**
 	* @return Si los datos son validos
 	*/
-	public boolean validarDatos(){
-		return !tfEstado.getText().trim().equals("");
-	}
 	public void handle(Event event){
-		if(event instanceof KeyEvent){
-			KeyEvent keyEvent = (KeyEvent)event;
-			if(keyEvent.getCode()==KeyCode.ENTER){
-				if(event.getSource().equals(tfEstado)){
-					if(validarDatos()){
-						Pedido pedido = new Pedido(0, 0, tfEstado.getText());
-						pedido.setIdFactura(pedidoModificar.getIdFactura());
-						pedido.setIdPedido(pedidoModificar.getIdPedido());
-						mPedido.modificarPedido(pedido);
-						
-						tpPrincipalChef.getTabs().remove(getTabCRUD());
-						tfEstado.clear();
-					}
-				}
-			}
-		}else if(event instanceof ActionEvent){
+		if(event instanceof ActionEvent){
 			if(event.getSource().equals(btnEstado)){
 				if(!tpPrincipalChef.getTabs().contains(getTabCRUD())){
 					tpPrincipalChef.getTabs().add(getTabCRUD());
 				}
 				tpPrincipalChef.getSelectionModel().select(getTabCRUD());
 				pedidoModificar = getContentPedidos().getSelectionModel().getSelectedItem();
-				setPedido(pedidoModificar);
-				tfEstado.clear();
 			}else if (event.getSource().equals(sendEstado)){
-				if(validarDatos()){
-					Pedido pedido = new Pedido(0, 0, tfEstado.getText());
-					pedido.setIdFactura(pedidoModificar.getIdFactura());
-					pedido.setIdPedido(pedidoModificar.getIdPedido());
-					mPedido.modificarPedido(pedido);
-					
-					tpPrincipalChef.getTabs().remove(getTabCRUD());
-					tfEstado.clear();
+				Pedido pedido = new Pedido(0, "entregado");
+				pedido.setIdPedido(pedidoModificar.getIdPedido());
+				mPedido.modificarPedido(pedido);
+				
+				tpPrincipalChef.getTabs().remove(getTabCRUD());
+			}
+		}else if(event instanceof MouseEvent){
+			if(event.getEventType() == MouseEvent.MOUSE_CLICKED){
+				if(event.getSource().equals(btnActualizarLista)){
+					mPedido.actualizarListaDePedidos();
 				}
 			}
 		}

@@ -26,10 +26,10 @@ public class ManejadorPedido{
 	}
 	public void actualizarListaDePedidos(){
 		listaDePedidos.clear();
-		ResultSet resultado = cnx.ejecutarConsulta("SELECT  idPedido, idFactura, estado FROM Pedido");
+		ResultSet resultado = cnx.ejecutarConsulta("SELECT  idPedido, estado FROM Pedido");
 		try{
 			while(resultado.next()){
-				Pedido pedido = new Pedido(resultado.getInt("idPedido"), resultado.getInt("idFactura"), resultado.getString("estado"));
+				Pedido pedido = new Pedido(resultado.getInt("idPedido"), resultado.getString("estado"));
 				listaDePedidos.add(pedido);
 			}
 		}catch(SQLException sql){
@@ -54,7 +54,7 @@ public class ManejadorPedido{
 	 * @param pedido Requiere de un pedio para poder agregarlo
 	 */
 	public void agregarPedido(Pedido pedido){
-		cnx.ejecutarSentencia("INSERT INTO Pedido(idFactura, estado) VALUES ('"+pedido.getEstado()+"',"+pedido.getIdFactura()+")");
+		cnx.ejecutarSentencia("INSERT INTO Pedido(estado) VALUES ('"+pedido.getEstado()+"')");
 		actualizarListaDePedidos();
 
 	}
@@ -62,7 +62,7 @@ public class ManejadorPedido{
 	 * @param pedido Requiere de un pedido para poder ser eliminado
 	 */
 	public void modificarPedido(Pedido pedido){
-		cnx.ejecutarSentencia("UPDATE Pedido SET estado='"+pedido.getEstado()+"', idFactura="+pedido.getIdFactura()+" WHERE idPedido="+pedido.getIdPedido());
+		cnx.ejecutarSentencia("UPDATE Pedido SET estado='"+pedido.getEstado()+"' WHERE idPedido="+pedido.getIdPedido());
 		actualizarListaDePedidos();
 	}
 }
