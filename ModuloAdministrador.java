@@ -247,6 +247,7 @@ public class ModuloAdministrador{
 		if(bpPlatillos==null){
 			bpPlatillos = new BorderPane();
 			bpPlatillos.setTop(this.getToolBarPlatillos());
+			bpPlatillos.setCenter(this.getContentPlatillos());
 		}
 		return bpPlatillos;
 	}
@@ -307,6 +308,7 @@ public class ModuloAdministrador{
 		if(bpBebidas==null){
 			bpBebidas = new BorderPane();
 			bpBebidas.setTop(this.getToolBarBebidas());
+			bpBebidas.setCenter(this.getContentBebidas());
 		}
 		return bpBebidas;
 	}
