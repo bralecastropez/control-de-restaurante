@@ -14,6 +14,7 @@ import org.brandon.beans.Pedido;
 */
 
 public class ManejadorPedido{
+	private String Estado;
 	private Conexion cnx;
 	private ObservableList<Pedido> listaDePedidos;
 
@@ -56,7 +57,6 @@ public class ManejadorPedido{
 	public void agregarPedido(Pedido pedido){
 		cnx.ejecutarSentencia("INSERT INTO Pedido(estado) VALUES ('"+pedido.getEstado()+"')");
 		actualizarListaDePedidos();
-
 	}
 	/**
 	 * @param pedido Requiere de un pedido para poder ser eliminado
@@ -64,6 +64,23 @@ public class ManejadorPedido{
 	public void modificarPedido(Pedido pedido){
 		cnx.ejecutarSentencia("UPDATE Pedido SET estado='"+pedido.getEstado()+"' WHERE idPedido="+pedido.getIdPedido());
 		actualizarListaDePedidos();
+	}
+	/**
+	*	@param pedido Requiere un pedido para obtener su estado
+	*/
+	public String obtenerEstado(Pedido pedido){
+		ResultSet resultado = cnx.ejecutarConsulta("SELECT estado FROM Pedido WHERE idPedido="+pedido.getIdPedido());
+		try{
+			if(resultado!=null){
+				if(resultado.next()){
+					Estado = resultado.getString("estado");
+					return Estado;
+				}
+			}
+		}catch(SQLException sql){
+			sql.printStackTrace();
+		}
+		return Estado;
 	}
 }
 

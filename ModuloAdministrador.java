@@ -18,6 +18,7 @@ public class ModuloAdministrador{
 	private BorderPane bpUsuarios, bpIngredientes, bpBebidas, bpPlatillos;
 	private Conexion conexion;
 	private ManejadorUsuario mUsuario;
+	private ModuloEmpleado mEmpleado;
 	//Contenido de la Tabla Usuarios
 	private ToolBar tbUsuarios;
 	private Button btnAgregarUsuarios, btnEliminarUsuarios,btnModificarUsuarios,btnActualizarUsuarios;
@@ -49,12 +50,19 @@ public class ModuloAdministrador{
 		this.mUsuario=mUsuario;
 	}
 	/**
+	 * @param mEmpleado Modulo Empleado usando inyecccion de dependencias.
+	 */
+	public void setMEmpleado(ModuloEmpleado mEmpleado){
+		this.mEmpleado=mEmpleado;
+	}
+	/**
 	*	@return TabPane contendor
 	*/
 	public TabPane getTabPanePrincipal(){
 		if(tpPrincipalAdministrador==null){
 			conexion = new Conexion();
 			this.setMUsuario(new ManejadorUsuario(conexion));
+			this.setMEmpleado(new ModuloEmpleado());
 			tpPrincipalAdministrador = new TabPane();
 			tpPrincipalAdministrador.getTabs().add(this.getTabUsuarios());
 			tpPrincipalAdministrador.getTabs().add(this.getTabIngredientes());
@@ -81,8 +89,27 @@ public class ModuloAdministrador{
 	public BorderPane getBorderPaneUsuarios(){
 		if(bpUsuarios==null){
 			bpUsuarios = new BorderPane();
+			bpUsuarios.setTop(this.getToolBarUsuarios());
 		}
 		return bpUsuarios;
+	}
+	/**
+	*	@return Toolbar de Usuarios
+	*/
+	public ToolBar getToolBarUsuarios(){
+		if(tbUsuarios==null){
+			tbUsuarios = new ToolBar();
+			btnAgregarUsuarios 		= new Button("Agregar Usuarios"); 
+			btnEliminarUsuarios 	= new Button("Eliminar Usuarios");
+			btnModificarUsuarios 	= new Button("Modificar Usuarios");
+			btnActualizarUsuarios 	= new Button("Actualizar Lista de Usuarios");
+			
+			tbUsuarios.getItems().add(btnAgregarUsuarios);
+			tbUsuarios.getItems().add(btnEliminarUsuarios);
+			tbUsuarios.getItems().add(btnModificarUsuarios);
+			tbUsuarios.getItems().add(btnActualizarUsuarios);
+		}
+		return tbUsuarios;
 	}
 	/**
 	*	@return Tabla de Ingredientes
@@ -101,11 +128,30 @@ public class ModuloAdministrador{
 	public BorderPane getBorderPaneIngredientes(){
 		if(bpIngredientes==null){
 			bpIngredientes = new BorderPane();
+			bpIngredientes.setTop(this.getToolBarIngredientes());
 		}
 		return bpIngredientes;
 	}
 	/**
-	*	@return Tabla de Comidas
+	*	@return Toolbar de Ingredientes
+	*/
+	public ToolBar getToolBarIngredientes(){
+		if(tbIngredientes==null){
+			tbIngredientes = new ToolBar();
+			btnAgregarIngredientes 		= new Button("Agregar Ingredientes"); 
+			btnEliminarIngredientes 	= new Button("Eliminar Ingredientes");
+			btnModificarIngredientes 	= new Button("Modificar Ingredientes");
+			btnActualizarIngredientes 	= new Button("Actualizar Lista de Ingredientes");
+			
+			tbIngredientes.getItems().add(btnAgregarIngredientes);
+			tbIngredientes.getItems().add(btnEliminarIngredientes);
+			tbIngredientes.getItems().add(btnModificarIngredientes);
+			tbIngredientes.getItems().add(btnActualizarIngredientes);
+		}
+		return tbIngredientes;
+	}
+	/**
+	*	@return Tabla de Platillos
 	*/
 	public Tab getTabPlatillos(){
 		if(tPlatillos==null){
@@ -116,13 +162,32 @@ public class ModuloAdministrador{
 		return tPlatillos;
 	}
 	/**
-	*	@return BorderPane de Comidas
+	*	@return BorderPane de Platillos
 	*/
 	public BorderPane getBorderPanePlatillos(){
 		if(bpPlatillos==null){
 			bpPlatillos = new BorderPane();
+			bpPlatillos.setTop(this.getToolBarPlatillos());
 		}
 		return bpPlatillos;
+	}
+	/**
+	*	@return Toolbar de Platillos
+	*/
+	public ToolBar getToolBarPlatillos(){
+		if(tbPlatillos==null){
+			tbPlatillos = new ToolBar();
+			btnAgregarPlatillos 		= new Button("Agregar Platillos"); 
+			btnEliminarPlatillos 		= new Button("Eliminar Platillos");
+			btnModificarPlatillos 		= new Button("Modificar Platillos");
+			btnActualizarPlatillos 		= new Button("Actualizar Lista de Platillos");
+			
+			tbPlatillos.getItems().add(btnAgregarPlatillos);
+			tbPlatillos.getItems().add(btnEliminarPlatillos);
+			tbPlatillos.getItems().add(btnModificarPlatillos);
+			tbPlatillos.getItems().add(btnActualizarPlatillos);
+		}
+		return tbPlatillos;
 	}
 	/**
 	*	@return Tabla de Bebidas
@@ -141,8 +206,27 @@ public class ModuloAdministrador{
 	public BorderPane getBorderPaneBebidas(){
 		if(bpBebidas==null){
 			bpBebidas = new BorderPane();
+			bpBebidas.setTop(this.getToolBarBebidas());
 		}
 		return bpBebidas;
+	}
+	/**
+	*	@return Toolbar de Bebidas
+	*/
+	public ToolBar getToolBarBebidas(){
+		if(tbBebidas==null){
+			tbBebidas = new ToolBar();
+			btnAgregarBebidas 		= new Button("Agregar Bebidas"); 
+			btnEliminarBebidas 		= new Button("Eliminar Bebidas");
+			btnModificarBebidas 		= new Button("Modificar Bebidas");
+			btnActualizarBebidas 		= new Button("Actualizar Lista de Bebidas");
+			
+			tbBebidas.getItems().add(btnAgregarBebidas);
+			tbBebidas.getItems().add(btnEliminarBebidas);
+			tbBebidas.getItems().add(btnModificarBebidas);
+			tbBebidas.getItems().add(btnActualizarBebidas);
+		}
+		return tbBebidas;
 	}
 	
 }

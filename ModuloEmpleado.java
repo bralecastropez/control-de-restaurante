@@ -35,6 +35,7 @@ import org.brandon.beans.Pedido;
 
 @SuppressWarnings("unused")
 public class ModuloEmpleado implements EventHandler<Event>{
+	private String estadoPagado;
 	private Tab tPrincipalEmpleado;
 	private TabPane tpPrincipalEmpleado;
 	private ToolBar tbPrincipal;
@@ -106,6 +107,13 @@ public class ModuloEmpleado implements EventHandler<Event>{
 		}
 		return tAgregar;
 	}
+	public void cerrarPago(){
+		getTabPanePrincipal().getTabs().remove(getTabPedidosModificar());
+		bpModificarPrincipal.setTop(this.getGPContentModificar());
+		bpModificarPrincipal.setLeft(null);
+		bpModificarPrincipal.setCenter(null);
+		tfTarjeta.clear();
+	}
 	/**
 	*	@return Tabla de Pedidos Modificar
 	*/
@@ -113,6 +121,7 @@ public class ModuloEmpleado implements EventHandler<Event>{
 		if(tModificar==null){
 			tModificar = new Tab("Pedidos");
 			tModificar.setContent(this.getContentModificar());
+			//tModificar.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		}
 		return tModificar;
 	}
@@ -154,11 +163,11 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	public GridPane getGPContentModificar(){
 		if(bpModificar==null){
 			bpModificar = new GridPane();
-			btnEstadoCancelado = new Button("Cancelado");
+			btnEstadoCancelado = new Button("Cancelad");
 			btnEstadoCancelado.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnEstadoEspera = new Button("Espera");
 			btnEstadoEspera.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnEstadoPagado = new Button("Pagado");
+			btnEstadoPagado = new Button("Pagar");
 			btnEstadoPagado.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			
 			bpModificar.add(btnEstadoEspera,		0,0);
@@ -246,13 +255,6 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	public boolean validarTarjeta(){
 		return !tfTarjeta.getText().trim().equals("");
 	}
-	public void cerrarPago(){
-		getTabPanePrincipal().getTabs().remove(getTabPedidosModificar());
-		bpModificarPrincipal.setTop(this.getGPContentModificar());
-		bpModificarPrincipal.setLeft(null);
-		bpModificarPrincipal.setCenter(null);
-		tfTarjeta.clear();
-	}
 	public void handle(Event event){
 		if(event instanceof KeyEvent){
 			KeyEvent keyEvent = (KeyEvent)event;
@@ -304,10 +306,35 @@ public class ModuloEmpleado implements EventHandler<Event>{
 					
 					getTabPanePrincipal().getTabs().remove(getTabPedidosModificar());
 				}else if(event.getSource().equals(btnEstadoPagado)){
-					Pedido pedido = new Pedido(pedidoModificar.getIdPedido(), "pagado");
-					mPedido.modificarPedido(pedido);
-					bpModificarPrincipal.setLeft(pago);
-					bpModificarPrincipal.setTop(null);
+					Pedido estado = new Pedido(pedidoModificar.getIdPedido(), pedidoModificar.getEstado());
+					switch(mPedido.obtenerEstado(estado)){
+						case "entregado":
+							Pedido pedido = new Pedido(pedidoModificar.getIdPedido(), "pagado");
+							mPedido.modificarPedido(pedido);
+							bpModificarPrincipal.setLeft(pago);
+							bpModificarPrincipal.setTop(null);
+							this.cerrarPago();
+							break;
+						case "espera":
+							Label estadoEspera = new Label("El pedido debe estar Entregado para poder se Pagado");
+							bpModificarPrincipal.setTop(estadoEspera);
+							this.cerrarPago();
+							break;
+						case "cancelado":
+							Label estadoCancelado = new Label("El pedido se ha cancelado");
+							bpModificarPrincipal.setTop(estadoCancelado);
+							this.cerrarPago();
+							break;
+						case "pagado":
+							Label estadoPagado = new Label("El pedido ya se ha Pagado");
+							bpModificarPrincipal.setTop(estadoPagado);
+							this.cerrarPago();
+							break;
+						default:
+							this.cerrarPago();
+							break;
+					}
+					this.cerrarPago();
 				}else if(event.getSource().equals(btnAgregarPedido)){
 					if(validarDatos()){
 						Pedido pedido = new Pedido(0, tfEstado.getText());
