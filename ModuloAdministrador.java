@@ -1,7 +1,9 @@
 package org.brandon.sistema;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 
 import org.brandon.manejadores.ManejadorUsuario;
@@ -11,11 +13,24 @@ import org.brandon.db.Conexion;
 *	@author Brandon Castro
 */
 public class ModuloAdministrador{
-	private Tab tPrincipalAdministrador, tUsuarios, tIngredientes, tBebidas, tComidas;
+	private Tab tPrincipalAdministrador, tUsuarios, tIngredientes, tBebidas, tPlatillos;
 	private TabPane tpPrincipalAdministrador;
-	private BorderPane bpUsuarios, bpIngredientes, bpBebidas, bpComidas;
-	private ManejadorUsuario mUsuario;
+	private BorderPane bpUsuarios, bpIngredientes, bpBebidas, bpPlatillos;
 	private Conexion conexion;
+	private ManejadorUsuario mUsuario;
+	//Contenido de la Tabla Usuarios
+	private ToolBar tbUsuarios;
+	private Button btnAgregarUsuarios, btnEliminarUsuarios,btnModificarUsuarios,btnActualizarUsuarios;
+	//Contenido de la Tabla Ingredientes
+	private ToolBar tbIngredientes;
+	private Button btnAgregarIngredientes, btnEliminarIngredientes, btnModificarIngredientes, btnActualizarIngredientes;
+	//Contenido de la Tabla Bebidas
+	private ToolBar tbBebidas;
+	private Button btnAgregarBebidas, btnEliminarBebidas, btnModificarBebidas, btnActualizarBebidas;
+	//Contenido de la Tabla Platillo
+	private ToolBar tbPlatillos;
+	private Button btnAgregarPlatillos, btnEliminarPlatillos, btnModificarPlatillos, btnActualizarPlatillos;
+	
 	/**
 	*	@return Tabla Principal del Administrador
 	*/
@@ -27,6 +42,9 @@ public class ModuloAdministrador{
 		}
 		return tPrincipalAdministrador;
 	}
+	/**
+	 * @param mUsuario Manejador del Usuario usando inyecccion de dependencias.
+	 */
 	public void setMUsuario(ManejadorUsuario mUsuario){
 		this.mUsuario=mUsuario;
 	}
@@ -41,7 +59,7 @@ public class ModuloAdministrador{
 			tpPrincipalAdministrador.getTabs().add(this.getTabUsuarios());
 			tpPrincipalAdministrador.getTabs().add(this.getTabIngredientes());
 			tpPrincipalAdministrador.getTabs().add(this.getTabBebidas());
-			tpPrincipalAdministrador.getTabs().add(this.getTabComidas());
+			tpPrincipalAdministrador.getTabs().add(this.getTabPlatillos());
 			tpPrincipalAdministrador.getStylesheets().add("Login.css");
 		}
 		return tpPrincipalAdministrador;
@@ -72,7 +90,7 @@ public class ModuloAdministrador{
 	public Tab getTabIngredientes(){
 		if(tIngredientes==null){
 			tIngredientes = new Tab("Ingredientes");
-			tIngredientes.setContent(this.getBorderPaneUsuarios());
+			tIngredientes.setContent(this.getBorderPaneIngredientes());
 			tIngredientes.setClosable(false);
 		}
 		return tIngredientes;
@@ -89,22 +107,22 @@ public class ModuloAdministrador{
 	/**
 	*	@return Tabla de Comidas
 	*/
-	public Tab getTabComidas(){
-		if(tComidas==null){
-			tComidas = new Tab("Comida");
-			tComidas.setContent(this.getBorderPaneComidas());
-			tComidas.setClosable(false);
+	public Tab getTabPlatillos(){
+		if(tPlatillos==null){
+			tPlatillos = new Tab("Platillos");
+			tPlatillos.setContent(this.getBorderPanePlatillos());
+			tPlatillos.setClosable(false);
 		}
-		return tComidas;
+		return tPlatillos;
 	}
 	/**
 	*	@return BorderPane de Comidas
 	*/
-	public BorderPane getBorderPaneComidas(){
-		if(bpComidas==null){
-			bpComidas = new BorderPane();
+	public BorderPane getBorderPanePlatillos(){
+		if(bpPlatillos==null){
+			bpPlatillos = new BorderPane();
 		}
-		return bpComidas;
+		return bpPlatillos;
 	}
 	/**
 	*	@return Tabla de Bebidas

@@ -160,9 +160,6 @@ public class ModuloChef implements EventHandler<Event>{
 		}
 		return gpContentCRUD;
 	}
-	/**
-	* @return Si los datos son validos
-	*/
 	public void handle(Event event){
 		if(event instanceof ActionEvent){
 			if(event.getSource().equals(btnEstado)){
