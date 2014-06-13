@@ -33,7 +33,7 @@ import org.brandon.beans.Pedido;
 *	@author Brandon Castro
 */
 
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unchecked", "rawtypes", "unused"})
 public class ModuloEmpleado implements EventHandler<Event>{
 	private String estadoPagado;
 	private Tab tPrincipalEmpleado;
@@ -206,7 +206,6 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	/**
 	* @return Tabla que muestra todos los pedidos.
 	*/
-	@SuppressWarnings("unchecked")
 	public TableView<Pedido> getContentPedidos(){
 		if(tvPedidos==null){
 			tvPedidos = new TableView<Pedido>();

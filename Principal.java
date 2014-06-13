@@ -34,7 +34,7 @@ import org.brandon.db.Conexion;
 *	@author Brandon Castro
 */
 
-@SuppressWarnings("unused")
+@SuppressWarnings({ "unchecked", "rawtypes", "unused"})
 public class Principal extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
 	private Scene primaryScene;

@@ -67,6 +67,7 @@ public class ManejadorPedido{
 	}
 	/**
 	*	@param pedido Requiere un pedido para obtener su estado
+	*	@return Estado del pedido para poder ser Identificado
 	*/
 	public String obtenerEstado(Pedido pedido){
 		ResultSet resultado = cnx.ejecutarConsulta("SELECT estado FROM Pedido WHERE idPedido="+pedido.getIdPedido());
