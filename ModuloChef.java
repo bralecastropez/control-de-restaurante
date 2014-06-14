@@ -143,8 +143,20 @@ public class ModuloChef implements EventHandler<Event>{
 		if(tCRUD==null){
 			tCRUD = new Tab("Cambio de Estado");
 			tCRUD.setContent(getContentCRUD());
+			tCRUD.setOnClosed(new EventHandler<Event>() {
+			     public void handle(Event event) {
+			    	 cerrarEntrega();
+				     }
+				});
 		}
 		return tCRUD;
+	}
+	public void cerrarEntrega(){
+		sendEstado = new Button("Entregado");
+		sendEstado.setId("Estado");
+		sendEstado.addEventHandler(ActionEvent.ACTION, this);
+		gpContentCRUD.setTop(null);
+		gpContentCRUD.setCenter(sendEstado);
 	}
 	/**
 	* @return Contenido para modificar el Pedido.
@@ -156,6 +168,7 @@ public class ModuloChef implements EventHandler<Event>{
 			sendEstado = new Button("Entregado");
 			sendEstado.setId("Estado");
 			sendEstado.addEventHandler(ActionEvent.ACTION, this);
+			gpContentCRUD.setTop(null);
 			gpContentCRUD.setCenter(sendEstado);
 		}
 		return gpContentCRUD;
@@ -169,11 +182,32 @@ public class ModuloChef implements EventHandler<Event>{
 				tpPrincipalChef.getSelectionModel().select(getTabCRUD());
 				pedidoModificar = getContentPedidos().getSelectionModel().getSelectedItem();
 			}else if (event.getSource().equals(sendEstado)){
-				Pedido pedido = new Pedido(0, "entregado");
-				pedido.setIdPedido(pedidoModificar.getIdPedido());
-				mPedido.modificarPedido(pedido);
-				
-				tpPrincipalChef.getTabs().remove(getTabCRUD());
+				Pedido estado = new Pedido(pedidoModificar.getIdPedido(), pedidoModificar.getEstado());
+				switch(mPedido.obtenerEstado(estado)){
+					case "entregado":
+						Label estadoEntregado = new Label("El pedido ya se ha entregado");
+						getContentCRUD().setTop(estadoEntregado);
+						break;
+					case "espera":
+						Pedido pedido = new Pedido(0, "entregado");
+						pedido.setIdPedido(pedidoModificar.getIdPedido());
+						mPedido.modificarPedido(pedido);
+						
+						tpPrincipalChef.getTabs().remove(getTabCRUD());
+						break;
+					case "cancelado":
+						Label estadoCancelado = new Label("El pedido se ha cancelado");
+						getContentCRUD().setTop(estadoCancelado);
+						break;
+					case "pagado":
+						Label estadoPagado = new Label("El pedido ya se ha Pagado");
+						getContentCRUD().setTop(estadoPagado);
+						break;
+					default:
+						tpPrincipalChef.getTabs().remove(getTabCRUD());
+						getContentCRUD().setTop(null);
+						break;
+				}
 			}
 		}else if(event instanceof MouseEvent){
 			if(event.getEventType() == MouseEvent.MOUSE_CLICKED){

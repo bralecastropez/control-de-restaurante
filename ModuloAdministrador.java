@@ -23,7 +23,7 @@ import org.brandon.db.Conexion;
 /**
 *	@author Brandon Castro
 */
-@SuppressWarnings({ "unchecked", "rawtypes", "unused"})
+@SuppressWarnings({ "unchecked", "rawtypes"})
 public class ModuloAdministrador{
 	private Tab tPrincipalAdministrador, tUsuarios, tIngredientes, tBebidas, tPlatillos;
 	private TabPane tpPrincipalAdministrador;

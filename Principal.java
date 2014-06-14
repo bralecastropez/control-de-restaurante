@@ -34,7 +34,7 @@ import org.brandon.db.Conexion;
 *	@author Brandon Castro
 */
 
-@SuppressWarnings({ "unchecked", "rawtypes", "unused"})
+@SuppressWarnings("unused")
 public class Principal extends Application implements EventHandler<Event>{
 	private Stage primaryStage;
 	private Scene primaryScene;
@@ -93,7 +93,7 @@ public class Principal extends Application implements EventHandler<Event>{
 		if(bpContainerPrincipal==null){
 			bpContainerPrincipal = new BorderPane();
 			lblLogin = new Label("Bienvenido");
-			lblLogin.setAlignment(Pos.TOP_CENTER);
+			lblLogin.setAlignment(Pos.CENTER);
 			lblLogin.setId("Logintext");
 			btnDesconectar = new Button("Cerrar Sesion");
 			btnDesconectar.addEventHandler(ActionEvent.ACTION, this);
@@ -266,6 +266,8 @@ public class Principal extends Application implements EventHandler<Event>{
 									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
+									lblLogin.setText("Bienvenido");
+									lblLogin.setId("Logintext");
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
 									tpPrincipalTablas.getTabs().add(mAdministrador.getTabPrincipalAdministrador());
 									bpContainerPrincipal.setRight(btnDesconectar);
@@ -275,6 +277,8 @@ public class Principal extends Application implements EventHandler<Event>{
 									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
+									lblLogin.setText("Bienvenido");
+									lblLogin.setId("Logintext");
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
 									tpPrincipalTablas.getTabs().add(mChef.getTabPrincipalChef());
 									bpContainerPrincipal.setRight(btnDesconectar);
@@ -284,6 +288,8 @@ public class Principal extends Application implements EventHandler<Event>{
 									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
+									lblLogin.setText("Bienvenido");
+									lblLogin.setId("Logintext");
 									tpPrincipalTablas.getTabs().remove(this.getTabLogin());
 									tpPrincipalTablas.getTabs().add(mEmpleado.getTabPrincipalEmpleado());
 									bpContainerPrincipal.setRight(btnDesconectar);
@@ -297,7 +303,8 @@ public class Principal extends Application implements EventHandler<Event>{
 									break;
 							}
 						}else{
-							//AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
+							lblLogin.setId("LoginError");
+							lblLogin.setText("Usuario o Contraseña Incorrectos");
 							tfNombre.clear();
 							pfPass.clear();
 						}
@@ -314,6 +321,8 @@ public class Principal extends Application implements EventHandler<Event>{
 								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
+								lblLogin.setText("Bienvenido");
+								lblLogin.setId("Logintext");
 								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
 								tpPrincipalTablas.getTabs().add(mAdministrador.getTabPrincipalAdministrador());
 								bpContainerPrincipal.setRight(btnDesconectar);
@@ -323,6 +332,8 @@ public class Principal extends Application implements EventHandler<Event>{
 								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
+								lblLogin.setText("Bienvenido");
+								lblLogin.setId("Logintext");
 								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
 								tpPrincipalTablas.getTabs().add(mChef.getTabPrincipalChef());
 								bpContainerPrincipal.setRight(btnDesconectar);
@@ -332,6 +343,8 @@ public class Principal extends Application implements EventHandler<Event>{
 								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
+								lblLogin.setText("Bienvenido");
+								lblLogin.setId("Logintext");
 								tpPrincipalTablas.getTabs().remove(this.getTabLogin());
 								tpPrincipalTablas.getTabs().add(mEmpleado.getTabPrincipalEmpleado());
 								bpContainerPrincipal.setRight(btnDesconectar);
@@ -345,7 +358,8 @@ public class Principal extends Application implements EventHandler<Event>{
 								break;
 						}
 					}else{
-						//AcercaDe.getInstancia().getDialogFalse(primaryStage).show();
+						lblLogin.setId("LoginError");
+						lblLogin.setText("Usuario o Contraseña Incorrectos");
 						tfNombre.clear();
 						pfPass.clear();
 					}
