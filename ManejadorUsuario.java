@@ -12,11 +12,10 @@ import java.sql.ResultSet;
 /**
 *	@author Brandon Castro
 */
-
+@SuppressWarnings({"unused"})
 public class ManejadorUsuario{
 	private ObservableList<Usuario> listaDeUsuarios;
 	private int IdRol;
-	@SuppressWarnings("unused")
 	private Usuario usuarioConectado;
 	private Conexion cnx;
 	
@@ -26,9 +25,9 @@ public class ManejadorUsuario{
 	public ManejadorUsuario(Conexion conexion){
 		listaDeUsuarios = FXCollections.observableArrayList();
 		cnx = conexion;
-		this.actualizarLista();
+		this.actualizarListaDeUsuarios();
 	}
-	public void actualizarLista(){
+	public void actualizarListaDeUsuarios(){
 		ResultSet resultado = cnx.ejecutarConsulta("SELECT Usuario.idUsuario,Usuario.nombre, Usuario.pass,Rol.nombre AS Rol, Usuario.idRol FROM Usuario INNER JOIN Rol ON Usuario.idRol=Rol.idRol");
 		try{
 			if(resultado!=null){
@@ -45,18 +44,20 @@ public class ManejadorUsuario{
 	 * @return La lista de usuarios
 	 */
 	public ObservableList<Usuario> getListaDeUsuarios(){
+		actualizarListaDeUsuarios();
 		return this.listaDeUsuarios;
 	}
 	public void desconectar(){
+		actualizarListaDeUsuarios();
 		this.usuarioConectado=null;
 	}
 	/**
-	 * 
 	 * @param nombre Nombre del usuario para poder obtener su rol
 	 * @param pass	Contraseña del usuario para poder obtener su rol
 	 * @return	El rol de usuario
 	 */
 	public int getRol(String nombre, String pass){
+		actualizarListaDeUsuarios();
 		ResultSet resultado = cnx.ejecutarConsulta("SELECT idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");
 		try{
 			if(resultado!=null){
@@ -76,6 +77,7 @@ public class ManejadorUsuario{
 	 * @return	El usuario se ha conectado
 	 */
 	public boolean conectar(String nombre, String pass){
+		actualizarListaDeUsuarios();
 		ResultSet resultado = cnx.ejecutarConsulta("SELECT idUsuario, nombre, pass, idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");
 		try{
 			if(resultado!=null){
@@ -88,6 +90,19 @@ public class ManejadorUsuario{
 			sql.printStackTrace();
 		}
 		return false;
+	}
+	public void eliminarUsuario(Usuario usuario){
+		cnx.ejecutarSentencia("DELETE FROM Usuario WHERE idUsuario="+usuario.getIdUsuario());
+		actualizarListaDeUsuarios();
+	}
+	public void agregarUsuario(Usuario usuario){
+		cnx.ejecutarSentencia("INSERT INTO Usuario(nombre, pass, idRol) VALUES ('"+usuario.getNombre()+"','"+usuario.getPass()+"',"+usuario.getIdRol()+")");
+		actualizarListaDeUsuarios();
+
+	}
+	public void modificarUsuario(Usuario usuario){
+		cnx.ejecutarSentencia("UPDATE Usuario SET nombre='"+usuario.getNombre()+"', pass='"+usuario.getPass()+"', idRol="+usuario.getIdRol()+" WHERE idUsuario="+usuario.getIdUsuario());
+		actualizarListaDeUsuarios();
 	}
 
 }

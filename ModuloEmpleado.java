@@ -41,7 +41,6 @@ import org.brandon.beans.Platillo;
 /**
 *	@author Brandon Castro
 */
-
 @SuppressWarnings({ "unchecked","rawtypes", "unused"})
 public class ModuloEmpleado implements EventHandler<Event>{
 	private String estadoPagado;

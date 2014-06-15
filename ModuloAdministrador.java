@@ -1,5 +1,7 @@
 package org.brandon.sistema;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
@@ -8,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 import org.brandon.manejadores.ManejadorUsuario;
@@ -23,8 +26,8 @@ import org.brandon.db.Conexion;
 /**
 *	@author Brandon Castro
 */
-@SuppressWarnings({ "unchecked", "rawtypes"})
-public class ModuloAdministrador{
+@SuppressWarnings({ "unchecked", "rawtypes", "unused"})
+public class ModuloAdministrador implements EventHandler<Event>{
 	private Tab tPrincipalAdministrador, tUsuarios, tIngredientes, tBebidas, tPlatillos;
 	private TabPane tpPrincipalAdministrador;
 	private BorderPane bpUsuarios, bpIngredientes, bpBebidas, bpPlatillos;
@@ -33,19 +36,35 @@ public class ModuloAdministrador{
 	private ManejadorIngrediente mIngrediente;
 	private ManejadorBebida mBebida;
 	private ManejadorPlatillo mPlatillo;
-	//Contenido de la Tabla Usuarios
+	//--Contenido de la Tabla Usuarios--
+	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
+	private boolean estadoMantenimientoUsuario;
+	private Tab tbCRUDUsuario;
+	private Usuario usuarioModificar;
 	private ToolBar tbUsuarios;
 	private Button btnAgregarUsuarios, btnEliminarUsuarios,btnModificarUsuarios,btnActualizarUsuarios;
 	private TableView tvUsuarios;
-	//Contenido de la Tabla Ingredientes
+	//--Contenido de la Tabla Ingredientes--
+	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
+	private boolean estadoMantenimientoIngrediente;
+	private Tab tbCRUDIngrediente;
+	private Ingrediente ingredienteModificar;
 	private ToolBar tbIngredientes;
 	private Button btnAgregarIngredientes, btnEliminarIngredientes, btnModificarIngredientes, btnActualizarIngredientes;
 	private TableView tvIngredientes;
-	//Contenido de la Tabla Bebidas
+	//--Contenido de la Tabla Bebidas--
+	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
+	private boolean estadoMantenimientoBebida;
+	private Tab tbCRUDBebida;
+	private Bebida bebidaModificar;
 	private ToolBar tbBebidas;
 	private Button btnAgregarBebidas, btnEliminarBebidas, btnModificarBebidas, btnActualizarBebidas;
 	private TableView tvBebidas;
-	//Contenido de la Tabla Platillo
+	//--Contenido de la Tabla Platillo--
+	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
+	private boolean estadoMantenimientoPlatillo;
+	private Tab tbCRUDPlatillo;
+	private Platillo platilloModificar;
 	private ToolBar tbPlatillos;
 	private Button btnAgregarPlatillos, btnEliminarPlatillos, btnModificarPlatillos, btnActualizarPlatillos;
 	private TableView tvPlatillos;
@@ -133,9 +152,13 @@ public class ModuloAdministrador{
 		if(tbUsuarios==null){
 			tbUsuarios = new ToolBar();
 			btnAgregarUsuarios 		= new Button("Agregar Usuarios"); 
+			btnAgregarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnEliminarUsuarios 	= new Button("Eliminar Usuarios");
+			btnEliminarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnModificarUsuarios 	= new Button("Modificar Usuarios");
+			btnModificarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarUsuarios 	= new Button("Actualizar Lista de Usuarios");
+			btnActualizarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			
 			tbUsuarios.getItems().add(btnAgregarUsuarios);
 			tbUsuarios.getItems().add(btnEliminarUsuarios);
@@ -197,9 +220,13 @@ public class ModuloAdministrador{
 		if(tbIngredientes==null){
 			tbIngredientes = new ToolBar();
 			btnAgregarIngredientes 		= new Button("Agregar Ingredientes"); 
+			btnAgregarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnEliminarIngredientes 	= new Button("Eliminar Ingredientes");
+			btnEliminarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnModificarIngredientes 	= new Button("Modificar Ingredientes");
+			btnModificarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarIngredientes 	= new Button("Actualizar Lista de Ingredientes");
+			btnActualizarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			
 			tbIngredientes.getItems().add(btnAgregarIngredientes);
 			tbIngredientes.getItems().add(btnEliminarIngredientes);
@@ -258,9 +285,13 @@ public class ModuloAdministrador{
 		if(tbPlatillos==null){
 			tbPlatillos = new ToolBar();
 			btnAgregarPlatillos 		= new Button("Agregar Platillos"); 
+			btnAgregarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnEliminarPlatillos 		= new Button("Eliminar Platillos");
+			btnEliminarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnModificarPlatillos 		= new Button("Modificar Platillos");
+			btnModificarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarPlatillos 		= new Button("Actualizar Lista de Platillos");
+			btnActualizarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			
 			tbPlatillos.getItems().add(btnAgregarPlatillos);
 			tbPlatillos.getItems().add(btnEliminarPlatillos);
@@ -318,10 +349,14 @@ public class ModuloAdministrador{
 	public ToolBar getToolBarBebidas(){
 		if(tbBebidas==null){
 			tbBebidas = new ToolBar();
-			btnAgregarBebidas 		= new Button("Agregar Bebidas"); 
-			btnEliminarBebidas 		= new Button("Eliminar Bebidas");
+			btnAgregarBebidas 			= new Button("Agregar Bebidas"); 
+			btnAgregarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			btnEliminarBebidas 			= new Button("Eliminar Bebidas");
+			btnEliminarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnModificarBebidas 		= new Button("Modificar Bebidas");
+			btnModificarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarBebidas 		= new Button("Actualizar Lista de Bebidas");
+			btnActualizarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			
 			tbBebidas.getItems().add(btnAgregarBebidas);
 			tbBebidas.getItems().add(btnEliminarBebidas);
@@ -350,6 +385,55 @@ public class ModuloAdministrador{
 			tvBebidas.setItems(mBebida.getListaDeBebidas());
 		}
 		return tvBebidas;
+	}
+	/**
+	 * @param event El tipo de evento que se esta utilizando
+	 */
+	public void handle(Event event) {
+		if(event instanceof MouseEvent){
+			if(event.getEventType() == MouseEvent.MOUSE_CLICKED){
+				///EVENTOS DE USUARIOS
+				if(event.getSource().equals(btnAgregarUsuarios)){
+					
+				}else if(event.getSource().equals(btnEliminarUsuarios)){
+									
+				}else if(event.getSource().equals(btnModificarUsuarios)){
+					
+				}else if(event.getSource().equals(btnActualizarUsuarios)){
+					mUsuario.actualizarListaDeUsuarios();
+				}
+				//EVENTOS DE INGREDIENTES
+				if(event.getSource().equals(btnAgregarIngredientes)){
+					
+				}else if(event.getSource().equals(btnEliminarIngredientes)){
+									
+				}else if(event.getSource().equals(btnModificarIngredientes)){
+					
+				}else if(event.getSource().equals(btnActualizarIngredientes)){
+					mIngrediente.actualizarListaDeIngredientes();
+				}
+				///EVENTOS DE PLATILLOS
+				if(event.getSource().equals(btnAgregarPlatillos)){
+					
+				}else if(event.getSource().equals(btnEliminarPlatillos)){
+									
+				}else if(event.getSource().equals(btnModificarPlatillos)){
+					
+				}else if(event.getSource().equals(btnActualizarPlatillos)){
+					mPlatillo.actualizarListaDePlatillos();
+				}
+				///EVENTOS DE BEBIDAS
+				if(event.getSource().equals(btnAgregarBebidas)){
+					
+				}else if(event.getSource().equals(btnEliminarUsuarios)){
+									
+				}else if(event.getSource().equals(btnModificarBebidas)){
+					
+				}else if(event.getSource().equals(btnActualizarBebidas)){
+					mBebida.actualizarListaDeBebidas();
+				}
+			}
+		}
 	}
 	
 }
