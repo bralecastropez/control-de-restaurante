@@ -1,17 +1,33 @@
 package org.brandon.sistema;
 
+import java.util.ArrayList;
+
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import org.brandon.manejadores.ManejadorUsuario;
 import org.brandon.manejadores.ManejadorIngrediente;
@@ -42,8 +58,13 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private Tab tbCRUDUsuario;
 	private Usuario usuarioModificar;
 	private ToolBar tbUsuarios;
-	private Button btnAgregarUsuarios, btnEliminarUsuarios,btnModificarUsuarios,btnActualizarUsuarios;
+	private Button btnAgregarUsuarios, btnEliminarUsuarios,btnModificarUsuarios,btnActualizarUsuarios, btnAceptar;
 	private TableView tvUsuarios;
+	private GridPane CRUDUsuarios;
+	private Label lblNombreUsuarios,lblPassUsuarios, lblRol;
+	private TextField tfAgregarNombre, tfAgregarPass;
+	private ToggleGroup tgRol;
+	private ToggleButton tbRolAdministrador, tbRolEmpleado, tbRolChef;
 	//--Contenido de la Tabla Ingredientes--
 	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
 	private boolean estadoMantenimientoIngrediente;
@@ -52,6 +73,7 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private ToolBar tbIngredientes;
 	private Button btnAgregarIngredientes, btnEliminarIngredientes, btnModificarIngredientes, btnActualizarIngredientes;
 	private TableView tvIngredientes;
+	private GridPane CRUDIngredientes;
 	//--Contenido de la Tabla Bebidas--
 	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
 	private boolean estadoMantenimientoBebida;
@@ -60,6 +82,7 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private ToolBar tbBebidas;
 	private Button btnAgregarBebidas, btnEliminarBebidas, btnModificarBebidas, btnActualizarBebidas;
 	private TableView tvBebidas;
+	private GridPane CRUDBebidas;
 	//--Contenido de la Tabla Platillo--
 	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
 	private boolean estadoMantenimientoPlatillo;
@@ -68,6 +91,7 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private ToolBar tbPlatillos;
 	private Button btnAgregarPlatillos, btnEliminarPlatillos, btnModificarPlatillos, btnActualizarPlatillos;
 	private TableView tvPlatillos;
+	private GridPane CRUDPlatillos;
 	
 	/**
 	*	@return Tabla Principal del Administrador
@@ -85,6 +109,13 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	 */
 	public void setMUsuario(ManejadorUsuario mUsuario){
 		this.mUsuario=mUsuario;
+	}
+	/**
+	 * @param usuario Usuario que vamos a utilizar
+	 */
+	public void setUsuario(Usuario usuario){
+		tfAgregarNombre.setText(usuario.getNombre());
+		tfAgregarPass.setText(usuario.getPass());
 	}
 	/**
 	 * @param mPlatillo Manejador Platillo usando inyecccion de dependencias.
@@ -135,6 +166,52 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tUsuarios;
 	}
 	/**
+	 * @return Tab para modificar o agregar Usuarios
+	 */
+	public Tab getTabCRUDUsuario(){
+		if(tbCRUDUsuario==null){
+			tbCRUDUsuario = new Tab("Mantenimiento");
+			tbCRUDUsuario.setContent(getContentCRUDUsuario());
+		}
+		return tbCRUDUsuario;
+	}
+	private GridPane getContentCRUDUsuario() {
+		if(CRUDUsuarios==null){
+			CRUDUsuarios = new GridPane();
+			tgRol				= new ToggleGroup();
+			lblNombreUsuarios	= new Label("Nombre:");
+			lblPassUsuarios 	= new Label("Contraseña:");
+			lblRol				= new Label("Rol");
+			lblRol.setTextAlignment(TextAlignment.CENTER);
+			tfAgregarNombre 	= new TextField();
+			tfAgregarNombre.setPromptText("Nombre de Usuario");
+			tfAgregarNombre.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfAgregarPass 		= new TextField();
+			tfAgregarPass.setPromptText("Clave de Usuario");
+			tfAgregarPass.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tbRolAdministrador	= new ToggleButton("Administrador");
+			tbRolAdministrador.setToggleGroup(tgRol);
+			tbRolChef 			= new ToggleButton("    Chef     ");
+			tbRolChef.setToggleGroup(tgRol);
+			tbRolEmpleado 		= new ToggleButton("   Empleado  ");
+			tbRolEmpleado.setToggleGroup(tgRol);
+			btnAceptar			= new Button("Aceptar");
+			btnAceptar.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			
+			
+			CRUDUsuarios.add(lblNombreUsuarios, 			0, 0);
+			CRUDUsuarios.add(tfAgregarNombre, 				1, 0);
+			CRUDUsuarios.add(lblPassUsuarios,				0, 1);
+			CRUDUsuarios.add(tfAgregarPass, 				1, 1);
+			CRUDUsuarios.add(lblRol, 						0, 2, 3, 1);
+			CRUDUsuarios.add(tbRolAdministrador, 			0, 3);
+			CRUDUsuarios.add(tbRolChef, 					1, 3);
+			CRUDUsuarios.add(tbRolEmpleado, 				2, 3);
+			CRUDUsuarios.add(btnAceptar,					0, 4, 3, 1);
+		}
+		return CRUDUsuarios;
+	}
+	/**
 	*	@return BorderPane de Usuarios
 	*/
 	public BorderPane getBorderPaneUsuarios(){
@@ -151,11 +228,11 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	public ToolBar getToolBarUsuarios(){
 		if(tbUsuarios==null){
 			tbUsuarios = new ToolBar();
-			btnAgregarUsuarios 		= new Button("Agregar Usuarios"); 
+			btnAgregarUsuarios 		= new Button("Agregar Usuario"); 
 			btnAgregarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnEliminarUsuarios 	= new Button("Eliminar Usuarios");
+			btnEliminarUsuarios 	= new Button("Eliminar Usuario");
 			btnEliminarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnModificarUsuarios 	= new Button("Modificar Usuarios");
+			btnModificarUsuarios 	= new Button("Modificar Usuario");
 			btnModificarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarUsuarios 	= new Button("Actualizar Lista de Usuarios");
 			btnActualizarUsuarios.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -219,11 +296,11 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	public ToolBar getToolBarIngredientes(){
 		if(tbIngredientes==null){
 			tbIngredientes = new ToolBar();
-			btnAgregarIngredientes 		= new Button("Agregar Ingredientes"); 
+			btnAgregarIngredientes 		= new Button("Agregar Ingrediente"); 
 			btnAgregarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnEliminarIngredientes 	= new Button("Eliminar Ingredientes");
+			btnEliminarIngredientes 	= new Button("Eliminar Ingrediente");
 			btnEliminarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnModificarIngredientes 	= new Button("Modificar Ingredientes");
+			btnModificarIngredientes 	= new Button("Modificar Ingrediente");
 			btnModificarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarIngredientes 	= new Button("Actualizar Lista de Ingredientes");
 			btnActualizarIngredientes.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -284,11 +361,11 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	public ToolBar getToolBarPlatillos(){
 		if(tbPlatillos==null){
 			tbPlatillos = new ToolBar();
-			btnAgregarPlatillos 		= new Button("Agregar Platillos"); 
+			btnAgregarPlatillos 		= new Button("Agregar Platillo"); 
 			btnAgregarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnEliminarPlatillos 		= new Button("Eliminar Platillos");
+			btnEliminarPlatillos 		= new Button("Eliminar Platillo");
 			btnEliminarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnModificarPlatillos 		= new Button("Modificar Platillos");
+			btnModificarPlatillos 		= new Button("Modificar Platillo");
 			btnModificarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarPlatillos 		= new Button("Actualizar Lista de Platillos");
 			btnActualizarPlatillos.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -349,11 +426,11 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	public ToolBar getToolBarBebidas(){
 		if(tbBebidas==null){
 			tbBebidas = new ToolBar();
-			btnAgregarBebidas 			= new Button("Agregar Bebidas"); 
+			btnAgregarBebidas 			= new Button("Agregar Bebida"); 
 			btnAgregarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnEliminarBebidas 			= new Button("Eliminar Bebidas");
+			btnEliminarBebidas 			= new Button("Eliminar Bebida");
 			btnEliminarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnModificarBebidas 		= new Button("Modificar Bebidas");
+			btnModificarBebidas 		= new Button("Modificar Bebida");
 			btnModificarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnActualizarBebidas 		= new Button("Actualizar Lista de Bebidas");
 			btnActualizarBebidas.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
@@ -387,6 +464,12 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tvBebidas;
 	}
 	/**
+	 * @return Si los datos de usuario ingresados son correctos
+	 */
+	public boolean validarDatosDeUsuarios(){
+		return !tfAgregarNombre.getText().trim().equals("") && !tfAgregarPass.getText().trim().equals("");
+	}
+	/**
 	 * @param event El tipo de evento que se esta utilizando
 	 */
 	public void handle(Event event) {
@@ -394,19 +477,56 @@ public class ModuloAdministrador implements EventHandler<Event>{
 			if(event.getEventType() == MouseEvent.MOUSE_CLICKED){
 				///EVENTOS DE USUARIOS
 				if(event.getSource().equals(btnAgregarUsuarios)){
-					
+					estadoMantenimientoUsuario = false; 
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDUsuario()))
+						getTabPanePrincipal().getTabs().add(getTabCRUDUsuario());
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDUsuario());
+					setUsuario(new Usuario());
 				}else if(event.getSource().equals(btnEliminarUsuarios)){
-									
+					ObservableList<Usuario> usuarios = getContentUsuarios().getSelectionModel().getSelectedItems();
+					ArrayList<Usuario> listaNoObservable = new ArrayList<Usuario>(usuarios);
+					for(Usuario usuario : listaNoObservable){
+						mUsuario.eliminarUsuario(usuario);
+					}
 				}else if(event.getSource().equals(btnModificarUsuarios)){
-					
+					estadoMantenimientoUsuario = true;
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDUsuario()))
+						getTabPanePrincipal().getTabs().add(getTabCRUDUsuario());
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDUsuario());
+					usuarioModificar = getContentUsuarios().getSelectionModel().getSelectedItem();
+					setUsuario(usuarioModificar);
 				}else if(event.getSource().equals(btnActualizarUsuarios)){
 					mUsuario.actualizarListaDeUsuarios();
+				}else if(event.getSource().equals(btnAceptar)){
+					if(validarDatosDeUsuarios()){
+						Usuario usuario = new Usuario(0, 1, tfAgregarNombre.getText(), tfAgregarPass.getText());
+						if(estadoMantenimientoUsuario){
+							usuario.setIdUsuario(usuarioModificar.getIdUsuario());
+							mUsuario.modificarUsuario(usuario);
+						}else{
+							if(tbRolAdministrador.isSelected()){
+								usuario.setIdRol(1);
+								mUsuario.agregarUsuario(usuario);
+							}else if(tbRolChef.isSelected()){
+								usuario.setIdRol(2);
+								mUsuario.agregarUsuario(usuario);
+							}else if(tbRolEmpleado.isSelected()){
+								usuario.setIdRol(3);
+								mUsuario.agregarUsuario(usuario);
+							}
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDUsuario());
+					}
 				}
 				//EVENTOS DE INGREDIENTES
 				if(event.getSource().equals(btnAgregarIngredientes)){
 					
 				}else if(event.getSource().equals(btnEliminarIngredientes)){
-									
+					ObservableList<Ingrediente> ingredientes = getContentIngredientes().getSelectionModel().getSelectedItems();
+					ArrayList<Ingrediente> listaNoObservable = new ArrayList<Ingrediente>(ingredientes);
+					for(Ingrediente ingrediente : listaNoObservable){
+						mIngrediente.eliminarIngrediente(ingrediente);
+					}
 				}else if(event.getSource().equals(btnModificarIngredientes)){
 					
 				}else if(event.getSource().equals(btnActualizarIngredientes)){
@@ -416,7 +536,11 @@ public class ModuloAdministrador implements EventHandler<Event>{
 				if(event.getSource().equals(btnAgregarPlatillos)){
 					
 				}else if(event.getSource().equals(btnEliminarPlatillos)){
-									
+					ObservableList<Platillo> platillos = getContentPlatillos().getSelectionModel().getSelectedItems();
+					ArrayList<Platillo> listaNoObservable = new ArrayList<Platillo>(platillos);
+					for(Platillo platillo : listaNoObservable){
+						mPlatillo.eliminarPlatillo(platillo);
+					}
 				}else if(event.getSource().equals(btnModificarPlatillos)){
 					
 				}else if(event.getSource().equals(btnActualizarPlatillos)){
@@ -425,13 +549,46 @@ public class ModuloAdministrador implements EventHandler<Event>{
 				///EVENTOS DE BEBIDAS
 				if(event.getSource().equals(btnAgregarBebidas)){
 					
-				}else if(event.getSource().equals(btnEliminarUsuarios)){
-									
+				}else if(event.getSource().equals(btnEliminarBebidas)){
+					ObservableList<Bebida> bebidas = getContentBebidas().getSelectionModel().getSelectedItems();
+					ArrayList<Bebida> listaNoObservable = new ArrayList<Bebida>(bebidas);
+					for(Bebida bebida : listaNoObservable){
+						mBebida.eliminarBebida(bebida);
+					}				
 				}else if(event.getSource().equals(btnModificarBebidas)){
 					
 				}else if(event.getSource().equals(btnActualizarBebidas)){
 					mBebida.actualizarListaDeBebidas();
 				}
+			}
+		}else if(event instanceof KeyEvent){
+			KeyEvent keyEvent = (KeyEvent)event;
+			if(keyEvent.getCode()==KeyCode.ENTER){
+				///EVENTOS DE USUARIOS
+				if(event.getSource().equals(tfAgregarNombre) || event.getSource().equals(tfAgregarPass)){
+					if(validarDatosDeUsuarios()){
+						Usuario usuario = new Usuario(0, 1, tfAgregarNombre.getText(), tfAgregarPass.getText());
+						if(estadoMantenimientoUsuario){
+							usuario.setIdUsuario(usuarioModificar.getIdUsuario());
+							mUsuario.modificarUsuario(usuario);
+						}else{
+							if(tbRolAdministrador.isSelected()){
+								usuario.setIdRol(1);
+								mUsuario.agregarUsuario(usuario);
+							}else if(tbRolChef.isSelected()){
+								usuario.setIdRol(2);
+								mUsuario.agregarUsuario(usuario);
+							}else if(tbRolEmpleado.isSelected()){
+								usuario.setIdRol(3);
+								mUsuario.agregarUsuario(usuario);
+							}
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDUsuario());
+					}
+				}
+				///EVENTOS DE INGREDIENTES
+				///EVENTOS DE PLATILLOS
+				///EVENTOS DE BEBIDAS
 			}
 		}
 	}

@@ -24,11 +24,11 @@ public class ManejadorUsuario{
 	 */
 	public ManejadorUsuario(Conexion conexion){
 		listaDeUsuarios = FXCollections.observableArrayList();
-		cnx = conexion;
-		this.actualizarListaDeUsuarios();
+		this.cnx = conexion;
 	}
 	public void actualizarListaDeUsuarios(){
-		ResultSet resultado = cnx.ejecutarConsulta("SELECT Usuario.idUsuario,Usuario.nombre, Usuario.pass,Rol.nombre AS Rol, Usuario.idRol FROM Usuario INNER JOIN Rol ON Usuario.idRol=Rol.idRol");
+		listaDeUsuarios.clear();
+		ResultSet resultado = cnx.ejecutarConsulta("SELECT idUsuario, nombre,  pass, Usuario.idRol FROM Usuario");
 		try{
 			if(resultado!=null){
 				while(resultado.next()){
@@ -47,8 +47,26 @@ public class ManejadorUsuario{
 		actualizarListaDeUsuarios();
 		return this.listaDeUsuarios;
 	}
+	/**
+	 * @param nombre Nombre del usuario
+	 * @param pass	Contraseña del Usuario
+	 * @return	El usuario se ha conectado
+	 */
+	public boolean conectar(String nombre, String pass){
+		ResultSet resultado = cnx.ejecutarConsulta("SELECT idUsuario, nombre, pass, idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");
+		try{
+			if(resultado!=null){
+				if(resultado.next()){
+					usuarioConectado = new Usuario(resultado.getInt("idUsuario"), resultado.getInt("idRol"), resultado.getString("nombre"), resultado.getString("pass"));
+					return true;
+				}
+			}
+		}catch(SQLException sql){
+			sql.printStackTrace();
+		}
+		return false;
+	}
 	public void desconectar(){
-		actualizarListaDeUsuarios();
 		this.usuarioConectado=null;
 	}
 	/**
@@ -70,26 +88,6 @@ public class ManejadorUsuario{
 			sql.printStackTrace();
 		}
 		return IdRol;
-	}
-	/**
-	 * @param nombre Nombre del usuario
-	 * @param pass	Contraseña del Usuario
-	 * @return	El usuario se ha conectado
-	 */
-	public boolean conectar(String nombre, String pass){
-		actualizarListaDeUsuarios();
-		ResultSet resultado = cnx.ejecutarConsulta("SELECT idUsuario, nombre, pass, idRol FROM Usuario WHERE nombre='"+nombre+"' AND pass='"+pass+"'");
-		try{
-			if(resultado!=null){
-				if(resultado.next()){
-					usuarioConectado = new Usuario(resultado.getInt("idUsuario"), resultado.getInt("idRol"), resultado.getString("nombre"), resultado.getString("pass"));
-					return true;
-				}
-			}
-		}catch(SQLException sql){
-			sql.printStackTrace();
-		}
-		return false;
 	}
 	public void eliminarUsuario(Usuario usuario){
 		cnx.ejecutarSentencia("DELETE FROM Usuario WHERE idUsuario="+usuario.getIdUsuario());
