@@ -83,7 +83,9 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private Tab tbCRUDBebida;
 	private Bebida bebidaModificar;
 	private ToolBar tbBebidas;
-	private Button btnAgregarBebidas, btnEliminarBebidas, btnModificarBebidas, btnActualizarBebidas;
+	private Button btnAgregarBebidas, btnEliminarBebidas, btnModificarBebidas, btnActualizarBebidas, btnAceptarBebida;
+	private Label lblNombreBebida, lblPrecioBebida;
+	private TextField tfNombreBebida, tfPrecioBebida;
 	private TableView tvBebidas;
 	private GridPane CRUDBebidas;
 	//--Contenido de la Tabla Platillo--
@@ -92,7 +94,9 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private Tab tbCRUDPlatillo;
 	private Platillo platilloModificar;
 	private ToolBar tbPlatillos;
-	private Button btnAgregarPlatillos, btnEliminarPlatillos, btnModificarPlatillos, btnActualizarPlatillos;
+	private Button btnAgregarPlatillos, btnEliminarPlatillos, btnModificarPlatillos, btnActualizarPlatillos, btnAceptarPlatillo;
+	private Label lblNombrePlatillo, lblPrecioPlatillo;
+	private TextField tfNombrePlatillo, tfPrecioPlatillo;
 	private TableView tvPlatillos;
 	private GridPane CRUDPlatillos;
 	
@@ -383,7 +387,7 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tvIngredientes;
 	}
 	/**
-	 * @param libro
+	 * @param ingrediente Para agregar o modificar Ingredientes
 	 */
 	public void setIngrediente(Ingrediente ingrediente){
 		tfNombre.setText(ingrediente.getNombre());
@@ -402,7 +406,7 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tPlatillos;
 	}
 	/**
-	 * @return Tab para modificar o agregar Ingredientes
+	 * @return Tab para modificar o agregar Platillos
 	 */
 	public Tab getTabCRUDPlatillo(){
 		if(tbCRUDPlatillo==null){
@@ -412,11 +416,27 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tbCRUDPlatillo;
 	}
 	/**
-	 * @return GridPane para el CRUDIngrediente
+	 * @return GridPane para el CRUDPlatilo
 	 */
 	private GridPane getContentCRUDPlatillo() {
 		if(CRUDPlatillos==null){
 			CRUDPlatillos = new GridPane();
+			lblNombrePlatillo	= new Label("Nombre:");
+			lblPrecioPlatillo	= new Label("Precio:");
+			tfNombrePlatillo	= new TextField();
+			tfNombrePlatillo.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfNombrePlatillo.setPromptText("Ingrese el nombre");
+			tfPrecioPlatillo	= new TextField();
+			tfPrecioPlatillo.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfPrecioPlatillo.setPromptText("Ingrese el precio");
+			btnAceptarPlatillo	= new Button("Aceptar");
+			btnAceptarPlatillo.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			
+			CRUDPlatillos.add(lblNombrePlatillo, 	0, 0);
+			CRUDPlatillos.add(tfNombrePlatillo, 	1, 0);
+			CRUDPlatillos.add(lblPrecioPlatillo, 	0, 1);
+			CRUDPlatillos.add(tfPrecioPlatillo, 	1, 1);
+			CRUDPlatillos.add(btnAceptarPlatillo, 	0, 2, 2, 1);
 		}
 		return CRUDPlatillos;
 	}
@@ -475,6 +495,13 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tvPlatillos;
 	}
 	/**
+	 * @param platillo Para agregar o modificar Platillos
+	 */
+	public void setPlatillo(Platillo platillo){
+		tfNombrePlatillo.setText(platillo.getNombre());
+		tfPrecioPlatillo.setText(String.valueOf(platillo.getPrecio()));
+	}
+	/**
 	*	@return Tabla de Bebidas
 	*/
 	public Tab getTabBebidas(){
@@ -496,11 +523,27 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tbCRUDBebida;
 	}
 	/**
-	 * @return GridPane para el CRUDIngrediente
+	 * @return GridPane para el CRUDBebida
 	 */
 	private GridPane getContentCRUDBebida() {
 		if(CRUDBebidas==null){
 			CRUDBebidas = new GridPane();
+			lblNombreBebida		= new Label("Nombre:");
+			lblPrecioBebida		= new Label("Precio:");
+			tfNombreBebida		= new TextField();
+			tfNombreBebida.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfNombreBebida.setPromptText("Ingrese el nombre");
+			tfPrecioBebida		= new TextField();
+			tfPrecioBebida.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfPrecioBebida.setPromptText("Ingrese el precio");
+			btnAceptarBebida	= new Button("Aceptar");
+			btnAceptarBebida.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			
+			CRUDBebidas.add(lblNombreBebida, 	0, 0);
+			CRUDBebidas.add(tfNombreBebida, 	1, 0);
+			CRUDBebidas.add(lblPrecioBebida, 	0, 1);
+			CRUDBebidas.add(tfPrecioBebida, 	1, 1);
+			CRUDBebidas.add(btnAceptarBebida, 	0, 2, 2, 1);
 		}
 		return CRUDBebidas;
 	}
@@ -559,6 +602,13 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tvBebidas;
 	}
 	/**
+	 * @param bebida Para agregar o modificar Bebidas
+	 */
+	public void setBebida(Bebida bebida){
+		tfNombreBebida.setText(bebida.getNombre());
+		tfPrecioBebida.setText(String.valueOf(bebida.getPrecio()));
+	}
+	/**
 	 * @return Si los datos de usuario ingresados son correctos
 	 */
 	public boolean validarDatosDeUsuarios(){
@@ -571,6 +621,18 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return !tfNombre.getText().trim().equals("") && !tfCantidad.getText().trim().equals("") && !tfPrecio.getText().trim().equals("");
 	}
 	/**
+	 * @return Si los datos de Platillo ingresados son correctos
+	 */
+	public boolean validarDatosDePlatillos(){
+		return !tfNombrePlatillo.getText().trim().equals("") && !tfPrecioPlatillo.getText().trim().equals("");
+	}
+	/**
+	 * @return Si los datos de Bebida ingresados son correctos
+	 */
+	public boolean validarDatosDeBebidas(){
+		return !tfNombreBebida.getText().trim().equals("") && !tfPrecioBebida.getText().trim().equals("");
+	}
+	/**
 	 * @param event El tipo de evento que se esta utilizando
 	 */
 	public void handle(Event event) {
@@ -579,8 +641,9 @@ public class ModuloAdministrador implements EventHandler<Event>{
 				///EVENTOS DE USUARIOS
 				if(event.getSource().equals(btnAgregarUsuarios)){
 					estadoMantenimientoUsuario = false; 
-					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDUsuario()))
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDUsuario())){
 						getTabPanePrincipal().getTabs().add(getTabCRUDUsuario());
+					}
 					getTabPanePrincipal().getSelectionModel().select(getTabCRUDUsuario());
 					setUsuario(new Usuario());
 				}else if(event.getSource().equals(btnEliminarUsuarios)){
@@ -591,8 +654,9 @@ public class ModuloAdministrador implements EventHandler<Event>{
 					}
 				}else if(event.getSource().equals(btnModificarUsuarios)){
 					estadoMantenimientoUsuario = true;
-					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDUsuario()))
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDUsuario())){
 						getTabPanePrincipal().getTabs().add(getTabCRUDUsuario());
+					}
 					getTabPanePrincipal().getSelectionModel().select(getTabCRUDUsuario());
 					usuarioModificar = getContentUsuarios().getSelectionModel().getSelectedItem();
 					setUsuario(usuarioModificar);
@@ -622,8 +686,9 @@ public class ModuloAdministrador implements EventHandler<Event>{
 				//EVENTOS DE INGREDIENTES
 				if(event.getSource().equals(btnAgregarIngredientes)){
 					estadoMantenimientoIngrediente = false; 
-					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDIngrediente()))
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDIngrediente())){
 						getTabPanePrincipal().getTabs().add(getTabCRUDIngrediente());
+					}
 					getTabPanePrincipal().getSelectionModel().select(getTabCRUDIngrediente());
 					setIngrediente(new Ingrediente());
 				}else if(event.getSource().equals(btnEliminarIngredientes)){
@@ -634,8 +699,9 @@ public class ModuloAdministrador implements EventHandler<Event>{
 					}
 				}else if(event.getSource().equals(btnModificarIngredientes)){
 					estadoMantenimientoIngrediente = true;
-					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDIngrediente()))
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDIngrediente())){
 						getTabPanePrincipal().getTabs().add(getTabCRUDIngrediente());
+					}
 					getTabPanePrincipal().getSelectionModel().select(getTabCRUDIngrediente());
 					ingredienteModificar = getContentIngredientes().getSelectionModel().getSelectedItem();
 					setIngrediente(ingredienteModificar);
@@ -655,7 +721,12 @@ public class ModuloAdministrador implements EventHandler<Event>{
 				}
 				///EVENTOS DE PLATILLOS
 				if(event.getSource().equals(btnAgregarPlatillos)){
-					
+					estadoMantenimientoPlatillo = false; 
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDPlatillo())){
+						getTabPanePrincipal().getTabs().add(getTabCRUDPlatillo());
+					}
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDPlatillo());
+					setPlatillo(new Platillo());
 				}else if(event.getSource().equals(btnEliminarPlatillos)){
 					ObservableList<Platillo> platillos = getContentPlatillos().getSelectionModel().getSelectedItems();
 					ArrayList<Platillo> listaNoObservable = new ArrayList<Platillo>(platillos);
@@ -663,13 +734,35 @@ public class ModuloAdministrador implements EventHandler<Event>{
 						mPlatillo.eliminarPlatillo(platillo);
 					}
 				}else if(event.getSource().equals(btnModificarPlatillos)){
-					
+					estadoMantenimientoPlatillo = true;
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDPlatillo())){
+						getTabPanePrincipal().getTabs().add(getTabCRUDPlatillo());
+					}
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDPlatillo());
+					platilloModificar = getContentPlatillos().getSelectionModel().getSelectedItem();
+					setPlatillo(platilloModificar);
 				}else if(event.getSource().equals(btnActualizarPlatillos)){
 					mPlatillo.actualizarListaDePlatillos();
+				}else if(event.getSource().equals(btnAceptarPlatillo)){
+					if(validarDatosDePlatillos()){
+						Platillo platillo = new Platillo(0, Integer.parseInt(tfPrecioPlatillo.getText()),tfNombrePlatillo.getText());
+						if(estadoMantenimientoPlatillo){
+							platillo.setIdPlatillo(platilloModificar.getIdPlatillo());
+							mPlatillo.modificarPlatillo(platillo);
+						}else{
+							mPlatillo.agregarPlatillo(platillo);
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDPlatillo());
+					}
 				}
 				///EVENTOS DE BEBIDAS
 				if(event.getSource().equals(btnAgregarBebidas)){
-					
+					estadoMantenimientoBebida = false; 
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDBebida())){
+						getTabPanePrincipal().getTabs().add(getTabCRUDBebida());
+					}
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDBebida());
+					setBebida(new Bebida());
 				}else if(event.getSource().equals(btnEliminarBebidas)){
 					ObservableList<Bebida> bebidas = getContentBebidas().getSelectionModel().getSelectedItems();
 					ArrayList<Bebida> listaNoObservable = new ArrayList<Bebida>(bebidas);
@@ -677,9 +770,26 @@ public class ModuloAdministrador implements EventHandler<Event>{
 						mBebida.eliminarBebida(bebida);
 					}				
 				}else if(event.getSource().equals(btnModificarBebidas)){
-					
+					estadoMantenimientoBebida = true;
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDBebida())){
+						getTabPanePrincipal().getTabs().add(getTabCRUDBebida());
+					}
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDBebida());
+					bebidaModificar = getContentBebidas().getSelectionModel().getSelectedItem();
+					setBebida(bebidaModificar);
 				}else if(event.getSource().equals(btnActualizarBebidas)){
 					mBebida.actualizarListaDeBebidas();
+				}else if(event.getSource().equals(btnAceptarBebida)){
+					if(validarDatosDeBebidas()){
+						Bebida bebida = new Bebida(0, Integer.parseInt(tfPrecioBebida.getText()),tfNombreBebida.getText());
+						if(estadoMantenimientoBebida){
+							bebida.setIdBebida(bebidaModificar.getIdBebida());
+							mBebida.modificarBebida(bebida);
+						}else{
+							mBebida.agregarBebida(bebida);
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDBebida());
+					}
 				}
 			}
 		}else if(event instanceof KeyEvent){
@@ -721,7 +831,31 @@ public class ModuloAdministrador implements EventHandler<Event>{
 					}
 				}
 				///EVENTOS DE PLATILLOS
+				if(event.getSource().equals(tfNombrePlatillo) || event.getSource().equals(tfPrecioPlatillo)){
+					if(validarDatosDePlatillos()){
+						Platillo platillo = new Platillo(0, Integer.parseInt(tfPrecioPlatillo.getText()),tfNombrePlatillo.getText());
+						if(estadoMantenimientoPlatillo){
+							platillo.setIdPlatillo(platilloModificar.getIdPlatillo());
+							mPlatillo.modificarPlatillo(platillo);
+						}else{
+							mPlatillo.agregarPlatillo(platillo);
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDPlatillo());
+					}
+				}
 				///EVENTOS DE BEBIDAS
+				if(event.getSource().equals(tfNombreBebida) || event.getSource().equals(tfPrecioBebida)){
+					if(validarDatosDeBebidas()){
+						Bebida bebida = new Bebida(0, Integer.parseInt(tfPrecioBebida.getText()),tfNombreBebida.getText());
+						if(estadoMantenimientoBebida){
+							bebida.setIdBebida(bebidaModificar.getIdBebida());
+							mBebida.modificarBebida(bebida);
+						}else{
+							mBebida.agregarBebida(bebida);
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDBebida());
+					}
+				}
 			}
 		}
 	}

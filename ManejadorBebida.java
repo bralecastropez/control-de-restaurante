@@ -34,16 +34,16 @@ public class ManejadorBebida{
 		return listaDeBebidas;
 	}
 	public void eliminarBebida(Bebida bebida){
-		cnx.ejecutarSentencia("DELETE FROM Ingrediente WHERE idBebida="+bebida.getIdBebida());
+		cnx.ejecutarSentencia("DELETE FROM Bebida WHERE idBebida="+bebida.getIdBebida());
 		actualizarListaDeBebidas();
 	}
 	public void agregarBebida(Bebida bebida){
-		cnx.ejecutarSentencia("INSERT INTO Ingrediente(nombre, precio) VALUES ('"+bebida.getNombre()+"',"+bebida.getPrecio()+")");
+		cnx.ejecutarSentencia("INSERT INTO Bebida(nombre, precio) VALUES ('"+bebida.getNombre()+"',"+bebida.getPrecio()+")");
 		actualizarListaDeBebidas();
 
 	}
 	public void modificarBebida(Bebida bebida){
-		cnx.ejecutarSentencia("UPDATE Ingrediente SET nombre='"+bebida.getNombre()+"', precio="+bebida.getPrecio()+" WHERE idBebida="+bebida.getIdBebida());
+		cnx.ejecutarSentencia("UPDATE Bebida SET nombre='"+bebida.getNombre()+"', precio="+bebida.getPrecio()+" WHERE idBebida="+bebida.getIdBebida());
 		actualizarListaDeBebidas();
 	}
 }
