@@ -24,6 +24,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -58,7 +59,7 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private Tab tbCRUDUsuario;
 	private Usuario usuarioModificar;
 	private ToolBar tbUsuarios;
-	private Button btnAgregarUsuarios, btnEliminarUsuarios,btnModificarUsuarios,btnActualizarUsuarios, btnAceptar;
+	private Button btnAgregarUsuarios, btnEliminarUsuarios,btnModificarUsuarios,btnActualizarUsuarios, btnAceptarUsuario;
 	private TableView tvUsuarios;
 	private GridPane CRUDUsuarios;
 	private Label lblNombreUsuarios,lblPassUsuarios, lblRol;
@@ -71,8 +72,10 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	private Tab tbCRUDIngrediente;
 	private Ingrediente ingredienteModificar;
 	private ToolBar tbIngredientes;
-	private Button btnAgregarIngredientes, btnEliminarIngredientes, btnModificarIngredientes, btnActualizarIngredientes;
+	private Button btnAgregarIngredientes, btnEliminarIngredientes, btnModificarIngredientes, btnActualizarIngredientes, btnAceptarIngrediente;
 	private TableView tvIngredientes;
+	private Label lblNombre, lblCantidad, lblPrecio;
+	private TextField tfNombre, tfCantidad, tfPrecio;
 	private GridPane CRUDIngredientes;
 	//--Contenido de la Tabla Bebidas--
 	//Estado Mantenimiento TRUE=Modificar FALSE=Agregar
@@ -109,13 +112,6 @@ public class ModuloAdministrador implements EventHandler<Event>{
 	 */
 	public void setMUsuario(ManejadorUsuario mUsuario){
 		this.mUsuario=mUsuario;
-	}
-	/**
-	 * @param usuario Usuario que vamos a utilizar
-	 */
-	public void setUsuario(Usuario usuario){
-		tfAgregarNombre.setText(usuario.getNombre());
-		tfAgregarPass.setText(usuario.getPass());
 	}
 	/**
 	 * @param mPlatillo Manejador Platillo usando inyecccion de dependencias.
@@ -175,10 +171,14 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		}
 		return tbCRUDUsuario;
 	}
+	/**
+	 * @return GridPane para el CRUDUsuario
+	 */
 	private GridPane getContentCRUDUsuario() {
 		if(CRUDUsuarios==null){
 			CRUDUsuarios = new GridPane();
 			tgRol				= new ToggleGroup();
+			HBox vbRol 			= new HBox();
 			lblNombreUsuarios	= new Label("Nombre:");
 			lblPassUsuarios 	= new Label("Contraseña:");
 			lblRol				= new Label("Rol");
@@ -195,8 +195,11 @@ public class ModuloAdministrador implements EventHandler<Event>{
 			tbRolChef.setToggleGroup(tgRol);
 			tbRolEmpleado 		= new ToggleButton("   Empleado  ");
 			tbRolEmpleado.setToggleGroup(tgRol);
-			btnAceptar			= new Button("Aceptar");
-			btnAceptar.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			btnAceptarUsuario			= new Button("Aceptar");
+			btnAceptarUsuario.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			vbRol.getChildren().add(tbRolAdministrador);
+			vbRol.getChildren().add(tbRolChef);
+			vbRol.getChildren().add(tbRolEmpleado);
 			
 			
 			CRUDUsuarios.add(lblNombreUsuarios, 			0, 0);
@@ -204,10 +207,8 @@ public class ModuloAdministrador implements EventHandler<Event>{
 			CRUDUsuarios.add(lblPassUsuarios,				0, 1);
 			CRUDUsuarios.add(tfAgregarPass, 				1, 1);
 			CRUDUsuarios.add(lblRol, 						0, 2, 3, 1);
-			CRUDUsuarios.add(tbRolAdministrador, 			0, 3);
-			CRUDUsuarios.add(tbRolChef, 					1, 3);
-			CRUDUsuarios.add(tbRolEmpleado, 				2, 3);
-			CRUDUsuarios.add(btnAceptar,					0, 4, 3, 1);
+			CRUDUsuarios.add(vbRol,							0, 3, 3, 1);
+			CRUDUsuarios.add(btnAceptarUsuario,					0, 4, 3, 1);
 		}
 		return CRUDUsuarios;
 	}
@@ -269,6 +270,13 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tvUsuarios;
 	}
 	/**
+	 * @param usuario Usuario que vamos a utilizar
+	 */
+	public void setUsuario(Usuario usuario){
+		tfAgregarNombre.setText(usuario.getNombre());
+		tfAgregarPass.setText(usuario.getPass());
+	}
+	/**
 	*	@return Tabla de Ingredientes
 	*/
 	public Tab getTabIngredientes(){
@@ -278,6 +286,47 @@ public class ModuloAdministrador implements EventHandler<Event>{
 			tIngredientes.setClosable(false);
 		}
 		return tIngredientes;
+	}
+	/**
+	 * @return Tab para modificar o agregar Ingredientes
+	 */
+	public Tab getTabCRUDIngrediente(){
+		if(tbCRUDBebida==null){
+			tbCRUDBebida = new Tab("Mantenimiento");
+			tbCRUDBebida.setContent(getContentCRUDIngrediente());
+		}
+		return tbCRUDBebida;
+	}
+	/**
+	 * @return GridPane para el CRUDIngredientes
+	 */
+	private GridPane getContentCRUDIngrediente() {
+		if(CRUDIngredientes==null){
+			CRUDIngredientes 		= new GridPane();
+			lblNombre				= new Label("Nombre:  ");
+			lblCantidad				= new Label("Cantidad:");
+			lblPrecio				= new Label("Precio:  ");
+			tfNombre				= new TextField();
+			tfNombre.setPromptText("Nombre del Ingrediente");
+			tfNombre.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfCantidad				= new TextField();
+			tfCantidad.setPromptText("Cantidad de Ingredientes");
+			tfCantidad.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfPrecio				= new TextField();
+			tfPrecio.setPromptText("Precio del Ingrediente");
+			tfPrecio.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			btnAceptarIngrediente	= new Button("Aceptar");
+			btnAceptarIngrediente.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			
+			CRUDIngredientes.add(lblNombre, 			0, 0);
+			CRUDIngredientes.add(tfNombre,				1, 0);
+			CRUDIngredientes.add(lblCantidad, 			0, 1);
+			CRUDIngredientes.add(tfCantidad, 			1, 1);
+			CRUDIngredientes.add(lblPrecio, 			0, 2);
+			CRUDIngredientes.add(tfPrecio, 				1, 2);
+			CRUDIngredientes.add(btnAceptarIngrediente, 0, 3, 2, 1);
+		}
+		return CRUDIngredientes;
 	}
 	/**
 	*	@return BorderPane de Ingredientes
@@ -334,6 +383,14 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tvIngredientes;
 	}
 	/**
+	 * @param libro
+	 */
+	public void setIngrediente(Ingrediente ingrediente){
+		tfNombre.setText(ingrediente.getNombre());
+		tfCantidad.setText(String.valueOf(ingrediente.getCantidad()));
+		tfPrecio.setText(String.valueOf(ingrediente.getPrecio()));
+	}
+	/**
 	*	@return Tabla de Platillos
 	*/
 	public Tab getTabPlatillos(){
@@ -343,6 +400,25 @@ public class ModuloAdministrador implements EventHandler<Event>{
 			tPlatillos.setClosable(false);
 		}
 		return tPlatillos;
+	}
+	/**
+	 * @return Tab para modificar o agregar Ingredientes
+	 */
+	public Tab getTabCRUDPlatillo(){
+		if(tbCRUDPlatillo==null){
+			tbCRUDPlatillo = new Tab("Mantenimiento");
+			tbCRUDPlatillo.setContent(getContentCRUDPlatillo());
+		}
+		return tbCRUDPlatillo;
+	}
+	/**
+	 * @return GridPane para el CRUDIngrediente
+	 */
+	private GridPane getContentCRUDPlatillo() {
+		if(CRUDPlatillos==null){
+			CRUDPlatillos = new GridPane();
+		}
+		return CRUDPlatillos;
 	}
 	/**
 	*	@return BorderPane de Platillos
@@ -410,6 +486,25 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return tBebidas;
 	}
 	/**
+	 * @return Tab para modificar o agregar Bebidas
+	 */
+	public Tab getTabCRUDBebida(){
+		if(tbCRUDBebida==null){
+			tbCRUDBebida = new Tab("Mantenimiento");
+			tbCRUDBebida.setContent(getContentCRUDBebida());
+		}
+		return tbCRUDBebida;
+	}
+	/**
+	 * @return GridPane para el CRUDIngrediente
+	 */
+	private GridPane getContentCRUDBebida() {
+		if(CRUDBebidas==null){
+			CRUDBebidas = new GridPane();
+		}
+		return CRUDBebidas;
+	}
+	/**
 	*	@return BorderPane de Bebidas
 	*/
 	public BorderPane getBorderPaneBebidas(){
@@ -470,6 +565,12 @@ public class ModuloAdministrador implements EventHandler<Event>{
 		return !tfAgregarNombre.getText().trim().equals("") && !tfAgregarPass.getText().trim().equals("");
 	}
 	/**
+	 * @return Si los datos de Ingrediente ingresados son correctos
+	 */
+	public boolean validarDatosDeIngredientes(){
+		return !tfNombre.getText().trim().equals("") && !tfCantidad.getText().trim().equals("") && !tfPrecio.getText().trim().equals("");
+	}
+	/**
 	 * @param event El tipo de evento que se esta utilizando
 	 */
 	public void handle(Event event) {
@@ -497,7 +598,7 @@ public class ModuloAdministrador implements EventHandler<Event>{
 					setUsuario(usuarioModificar);
 				}else if(event.getSource().equals(btnActualizarUsuarios)){
 					mUsuario.actualizarListaDeUsuarios();
-				}else if(event.getSource().equals(btnAceptar)){
+				}else if(event.getSource().equals(btnAceptarUsuario)){
 					if(validarDatosDeUsuarios()){
 						Usuario usuario = new Usuario(0, 1, tfAgregarNombre.getText(), tfAgregarPass.getText());
 						if(estadoMantenimientoUsuario){
@@ -520,7 +621,11 @@ public class ModuloAdministrador implements EventHandler<Event>{
 				}
 				//EVENTOS DE INGREDIENTES
 				if(event.getSource().equals(btnAgregarIngredientes)){
-					
+					estadoMantenimientoIngrediente = false; 
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDIngrediente()))
+						getTabPanePrincipal().getTabs().add(getTabCRUDIngrediente());
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDIngrediente());
+					setIngrediente(new Ingrediente());
 				}else if(event.getSource().equals(btnEliminarIngredientes)){
 					ObservableList<Ingrediente> ingredientes = getContentIngredientes().getSelectionModel().getSelectedItems();
 					ArrayList<Ingrediente> listaNoObservable = new ArrayList<Ingrediente>(ingredientes);
@@ -528,9 +633,25 @@ public class ModuloAdministrador implements EventHandler<Event>{
 						mIngrediente.eliminarIngrediente(ingrediente);
 					}
 				}else if(event.getSource().equals(btnModificarIngredientes)){
-					
+					estadoMantenimientoIngrediente = true;
+					if(!getTabPanePrincipal().getTabs().contains(getTabCRUDIngrediente()))
+						getTabPanePrincipal().getTabs().add(getTabCRUDIngrediente());
+					getTabPanePrincipal().getSelectionModel().select(getTabCRUDIngrediente());
+					ingredienteModificar = getContentIngredientes().getSelectionModel().getSelectedItem();
+					setIngrediente(ingredienteModificar);
 				}else if(event.getSource().equals(btnActualizarIngredientes)){
 					mIngrediente.actualizarListaDeIngredientes();
+				}else if(event.getSource().equals(btnAceptarIngrediente)){
+					if(validarDatosDeIngredientes()){
+						Ingrediente ingrediente = new Ingrediente(0, Integer.parseInt(tfPrecio.getText()), Integer.parseInt(tfCantidad.getText()), tfNombre.getText());
+						if(estadoMantenimientoIngrediente){
+							ingrediente.setIdIngrediente(ingredienteModificar.getIdIngrediente());
+							mIngrediente.modificarIngrediente(ingrediente);
+						}else{
+							mIngrediente.agregarIngrediente(ingrediente);
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDIngrediente());
+					}
 				}
 				///EVENTOS DE PLATILLOS
 				if(event.getSource().equals(btnAgregarPlatillos)){
@@ -587,6 +708,18 @@ public class ModuloAdministrador implements EventHandler<Event>{
 					}
 				}
 				///EVENTOS DE INGREDIENTES
+				if(event.getSource().equals(tfNombre) || event.getSource().equals(tfCantidad) || event.getSource().equals(tfPrecio)){
+					if(validarDatosDeIngredientes()){
+						Ingrediente ingrediente = new Ingrediente(0, Integer.parseInt(tfPrecio.getText()), Integer.parseInt(tfCantidad.getText()), tfNombre.getText());
+						if(estadoMantenimientoIngrediente){
+							ingrediente.setIdIngrediente(ingredienteModificar.getIdIngrediente());
+							mIngrediente.modificarIngrediente(ingrediente);
+						}else{
+							mIngrediente.agregarIngrediente(ingrediente);
+						}
+						getTabPanePrincipal().getTabs().remove(getTabCRUDIngrediente());
+					}
+				}
 				///EVENTOS DE PLATILLOS
 				///EVENTOS DE BEBIDAS
 			}
