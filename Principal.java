@@ -1,6 +1,7 @@
 package org.brandon.ui;
 
 import javafx.application.Application;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
@@ -23,7 +24,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.geometry.Pos;
 
-import org.brandon.utilidades.AcercaDe;
 import org.brandon.sistema.ModuloChef;
 import org.brandon.sistema.ModuloAdministrador;
 import org.brandon.sistema.ModuloEmpleado;
@@ -36,8 +36,9 @@ import org.brandon.db.Conexion;
 
 @SuppressWarnings("unused")
 public class Principal extends Application implements EventHandler<Event>{
-	private Stage primaryStage;
-	private Scene primaryScene;
+	private Stage primaryStage, acercaDe;
+	private Scene primaryScene, sceneUno;
+	private Tab pScene;
 	private BorderPane bpContainerPrincipal;
 	private Button btnDesconectar;
 	private ManejadorUsuario mUsuario;
@@ -45,6 +46,7 @@ public class Principal extends Application implements EventHandler<Event>{
 	private ModuloAdministrador mAdministrador;
 	private ModuloChef mChef;
 	private Conexion conexion;
+	private Label lblUno;
 	//Contenedor de Tablas
 	private TabPane tpPrincipalTablas;
 	//Iniciar Sesion
@@ -97,7 +99,7 @@ public class Principal extends Application implements EventHandler<Event>{
 			lblLogin.setId("Logintext");
 			btnDesconectar = new Button("Cerrar Sesion");
 			btnDesconectar.addEventHandler(ActionEvent.ACTION, this);
-			bpContainerPrincipal.setTop(this.menuBar(primaryScene));
+			bpContainerPrincipal.setTop(this.menuBar());
 			bpContainerPrincipal.setRight(lblLogin);
 			bpContainerPrincipal.setCenter(this.getTabPanePrincipal());
 		}
@@ -197,10 +199,8 @@ public class Principal extends Application implements EventHandler<Event>{
 	}
 	/**
 	*	@return Barra De Menu
-	*	@param primaryScene Para cambiar el Tema
 	*/
-	public MenuBar menuBar(Scene primaryScene){
-		
+	public MenuBar menuBar(){
 		miUno = new MenuItem("Cerrar");
 		miUno.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
@@ -215,23 +215,40 @@ public class Principal extends Application implements EventHandler<Event>{
 				getTabPanePrincipal().getTabs().add(getTabLogin());
 		    }
 		});
-		miDos = new MenuItem("Tema Light");
+		/*miDos = new MenuItem("Tema Light");
 		miDos.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	primaryScene.getStylesheets().add("Login.css");
+		    	pScene.getStyleClass().add(getClass().getResource("Login.css").toExternalForm());
 		    }
 		});
 		miTres = new MenuItem("Tema Dark");
 		miTres.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	primaryScene.getStylesheets().add("Principal.css");
+		    	pScene.getStyleClass().add(getClass().getResource("Principal.css").toExternalForm());
 		    }
-		});
+		});*/
 		miCuatro = new 	MenuItem("Ayuda");
 		miCinco = new MenuItem("Acerca de...");
 		miCinco.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	AcercaDe.getInstancia().getAcercaDe().show();
+		    	acercaDe = new Stage();
+		    	
+			    lblUno = new Label("Creado Por Brandon Castro");
+			    lblUno.setId("Verificar");
+			    
+				sceneUno = new Scene(lblUno);
+				sceneUno.getStylesheets().add("Login.css");
+								 
+			    acercaDe.setTitle("Acerca de...");
+			    acercaDe.setScene(sceneUno);
+			    acercaDe.initOwner(primaryStage);
+			    acercaDe.initModality(Modality.APPLICATION_MODAL);
+			    acercaDe.setMaxHeight(150);
+			    acercaDe.setMaxWidth(220);
+			    acercaDe.setMinHeight(150);
+			    acercaDe.setMinWidth(220);
+			    acercaDe.setResizable(false);
+			    acercaDe.show();
 		    }
 		});
 		
@@ -239,8 +256,8 @@ public class Principal extends Application implements EventHandler<Event>{
 		mUno.getItems().add(miDesconectar);
 		mUno.getItems().add(miUno);
 		mDos= new Menu("Herramientas");
-		mDos.getItems().add(miDos);
-		mDos.getItems().add(miTres);
+		/*mDos.getItems().add(miDos);
+		mDos.getItems().add(miTres);*/
 		mTres= new Menu("Ayuda");
 		mTres.getItems().add(miCinco);
 		mTres.getItems().add(miCuatro);
@@ -263,7 +280,6 @@ public class Principal extends Application implements EventHandler<Event>{
 							switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
 								//Administrador
 								case 1:
-									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									lblLogin.setText("Bienvenido");
@@ -274,7 +290,6 @@ public class Principal extends Application implements EventHandler<Event>{
 									break;
 								//Chef
 								case 2:
-									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									lblLogin.setText("Bienvenido");
@@ -285,7 +300,6 @@ public class Principal extends Application implements EventHandler<Event>{
 									break;
 								//Empleado
 								case 3:
-									//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 									tfNombre.clear();
 									pfPass.clear();
 									lblLogin.setText("Bienvenido");
@@ -318,7 +332,6 @@ public class Principal extends Application implements EventHandler<Event>{
 						switch(mUsuario.getRol(tfNombre.getText(), pfPass.getText())){
 							//Administrador
 							case 1:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
 								lblLogin.setText("Bienvenido");
@@ -329,7 +342,6 @@ public class Principal extends Application implements EventHandler<Event>{
 								break;
 							//Chef
 							case 2:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
 								lblLogin.setText("Bienvenido");
@@ -340,7 +352,6 @@ public class Principal extends Application implements EventHandler<Event>{
 								break;
 							//Empleado
 							case 3:
-								//AcercaDe.getInstancia().getDialogTrue(primaryStage).show();
 								tfNombre.clear();
 								pfPass.clear();
 								lblLogin.setText("Bienvenido");

@@ -66,9 +66,10 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	private Tab tAgregar, tModificar, tPedidos;
 	private BorderPane bpAgregar, bpModificarPrincipal;
 	private GridPane bpModificar;
-	private TextField tfEstado;
-	private Button btnAgregarPedido,btnEstadoCancelado,btnEstadoPagado,btnEstadoEspera;
+	private TextField tfIdBebida, tfCantidadBebida, tfIdPlatillo, tfIdIngrediente, tfCantidadIngrediente, tfCantidadPlatillo, tfEstado, tfExtras;
+	private Button btnAgregarPedido,btnEstadoCancelado,btnEstadoPagado, btnInstrucciones;
 	private Pedido pedidoModificar;
+	private Label lblBebida, lblIdBebida, lblCantidadBebida, lblPlatillo, lblIdPlatillo, lblCantidadPlatillo, lblIngredientes, lblIdIngrediente, lblCantidadIngrediente, lbltfExtras, lblInstrucciones;
 	
 	/**
 	*	@return Tabla Principal del empleado
@@ -201,12 +202,9 @@ public class ModuloEmpleado implements EventHandler<Event>{
 			bpModificar = new GridPane();
 			btnEstadoCancelado = new Button("Cancelar");
 			btnEstadoCancelado.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			btnEstadoEspera = new Button("Espera");
-			btnEstadoEspera.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			btnEstadoPagado = new Button("Pagar");
 			btnEstadoPagado.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 			
-			bpModificar.add(btnEstadoEspera,		0,0);
 			bpModificar.add(btnEstadoPagado,		1,0);
 			bpModificar.add(btnEstadoCancelado,		2,0);
 			bpModificar.setPadding(new Insets(10, 50, 50, 50));
@@ -219,34 +217,100 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	public BorderPane getContentAgregar(){
 		if(bpAgregar==null){
 			bpAgregar = new BorderPane();
-			GridPane gpPrincipal 		= new GridPane();
-			VBox vbIngredientes 		= new VBox();
-			VBox vbPlatillos 			= new VBox();
-			VBox vbBebidas 				= new VBox();
-			Label lblPrincipal 			= new Label("Tabla de Pedidos");
+			GridPane gpPrincipalPedido 	= new GridPane();
+			lblBebida 					= new Label("Bebida");
+			lblPlatillo					= new Label("Platillo");
+			lblIngredientes				= new Label("Ingredientes Extras");
+			lbltfExtras					= new Label("Extras");
+			lblIdBebida					= new Label("IdBebida");
+			lblIdPlatillo				= new Label("IdPlatillo");
+			lblIdIngrediente			= new Label("IdIngrediente");
+			lblCantidadBebida			= new Label("Cantidad");
+			lblCantidadPlatillo			= new Label("Cantidad");
+			lblCantidadIngrediente		= new Label("Cantidad");
+			tfIdBebida					= new TextField();
+			tfIdPlatillo				= new TextField();
+			tfIdIngrediente				= new TextField();
+			tfCantidadBebida			= new TextField();
+			tfCantidadPlatillo			= new TextField();
+			tfCantidadIngrediente		= new TextField();
+			tfExtras					= new TextField();
+			tfExtras.setMinSize(250, 75);
+			tfExtras.setAlignment(Pos.BOTTOM_CENTER);
+			tfExtras.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfIdBebida.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfIdPlatillo.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfIdIngrediente.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfCantidadBebida.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfCantidadPlatillo.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			tfCantidadIngrediente.addEventHandler(KeyEvent.KEY_RELEASED, this);
+			
+			gpPrincipalPedido.add(lblBebida, 				0, 0, 2, 1);
+			gpPrincipalPedido.add(lblPlatillo, 				2, 0, 2, 1);
+			gpPrincipalPedido.add(lblIngredientes, 			4, 0, 2, 1);
+			gpPrincipalPedido.add(lblIdBebida, 				0, 1);
+			gpPrincipalPedido.add(lblIdPlatillo, 			2, 1);
+			gpPrincipalPedido.add(lblIdIngrediente, 		4, 1);
+			gpPrincipalPedido.add(lblCantidadBebida, 		0, 2);
+			gpPrincipalPedido.add(lblCantidadPlatillo, 		2, 2);
+			gpPrincipalPedido.add(lblCantidadIngrediente, 	4, 2);
+			gpPrincipalPedido.add(tfIdBebida, 				1, 1);
+			gpPrincipalPedido.add(tfIdPlatillo, 			3, 1);
+			gpPrincipalPedido.add(tfIdIngrediente, 			5, 1);
+			gpPrincipalPedido.add(tfCantidadBebida, 		1, 2);
+			gpPrincipalPedido.add(tfCantidadPlatillo, 		3, 2);
+			gpPrincipalPedido.add(tfCantidadIngrediente, 	5, 2);
+			gpPrincipalPedido.add(lbltfExtras,				6, 1);
+			gpPrincipalPedido.add(tfExtras,					7, 0, 3, 3);
+			
+			GridPane gpPrincipalTableView 		= new GridPane();
+			VBox vbIngredientes 				= new VBox();
+			VBox vbPlatillos 					= new VBox();
+			VBox vbBebidas 						= new VBox();
+			Label lblPrincipal 					= new Label(" ");
 			lblPrincipal.setTextAlignment(TextAlignment.CENTER);
-			Label lblIngredientes 		= new Label("Ingredientes");
-			Label lblPlatillos 		= new Label("Platillos");
-			Label lblBebidas 			= new Label("Bebidas");
-			tfEstado = new TextField("Estado del Pedido");
+			Label lblIngredientes 				= new Label("Ingredientes");
+			Label lblPlatillos 					= new Label("Platillos");
+			Label lblBebidas 					= new Label("Bebidas");
+			tfEstado 							= new TextField("Estado del Pedido");
 			tfEstado.addEventHandler(KeyEvent.KEY_RELEASED, this);
-			btnAgregarPedido = new Button("Agregar Pedido");
+			btnAgregarPedido 					= new Button("Agregar Pedido");
 			btnAgregarPedido.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-			bpAgregar.setTop(tfEstado);
-			bpAgregar.setRight(btnAgregarPedido);
-			bpAgregar.setCenter(gpPrincipal);
+			btnInstrucciones					= new Button("Instrucciones");
+			btnInstrucciones.addEventHandler(MouseEvent.DRAG_DETECTED, this);
+			btnInstrucciones.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			lblInstrucciones					= new Label("Instrucciones:   "
+					+ "En el campo de texto de Bebida debera ingresar su ID y su cantidad"
+					+ ""
+					+ "En el campo de texto de Platillo debera ingresar su ID y su cantidad"
+					+ ""
+					+ "En el campo de texto de Ingrediente debera ingresar su ID y su cantidad"
+					+ ""
+					+ "En el campo de texto de Extras debera ingresar lo que el cliente quiera"
+					+ "quitar o lo que el cliente no desea en el pedido"
+					+ ""
+					+ ""
+					+ ""
+					+ "");
+			lblInstrucciones.setVisible(false);
+			VBox vbRigth = new VBox();
+			vbRigth.getChildren().addAll(btnAgregarPedido, btnInstrucciones, lblInstrucciones);
+			bpAgregar.setTop(gpPrincipalPedido);
+			bpAgregar.setRight(vbRigth);
+			bpAgregar.setCenter(gpPrincipalTableView);
 			
 			vbIngredientes.getChildren().add(this.getContentIngredientes());
 			vbPlatillos.getChildren().add(this.getContentPlatillos());
 			vbBebidas.getChildren().add(this.getContentBebidas());
 			
-			gpPrincipal.add(lblPrincipal, 0	, 0, 3, 1);
-			gpPrincipal.add(lblIngredientes, 	0, 1);
-			gpPrincipal.add(vbIngredientes, 	0, 2);
-			gpPrincipal.add(lblPlatillos, 		1, 1);
-			gpPrincipal.add(vbPlatillos, 		1, 2);
-			gpPrincipal.add(lblBebidas, 		2, 1);
-			gpPrincipal.add(vbBebidas, 		2, 2);
+			gpPrincipalTableView.add(lblPrincipal, 		0, 0, 3, 1);
+			gpPrincipalTableView.add(lblIngredientes, 	0, 1);
+			gpPrincipalTableView.add(vbIngredientes, 	0, 2);
+			gpPrincipalTableView.add(lblPlatillos, 		1, 1);
+			gpPrincipalTableView.add(vbPlatillos, 		1, 2);
+			gpPrincipalTableView.add(lblBebidas, 		2, 1);
+			gpPrincipalTableView.add(vbBebidas, 		2, 2);
+			
 			
 		}
 		return bpAgregar;
@@ -260,7 +324,7 @@ public class ModuloEmpleado implements EventHandler<Event>{
 
 			tvIngredientes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			
-			TableColumn<Ingrediente, Integer> columnaIdIngrediente = new TableColumn<Ingrediente, Integer>("Identificador ");
+			TableColumn<Ingrediente, Integer> columnaIdIngrediente = new TableColumn<Ingrediente, Integer>("ID");
 			columnaIdIngrediente.setCellValueFactory(new PropertyValueFactory<Ingrediente, Integer>("idIngrediente"));
 
 			TableColumn<Ingrediente, String> columnaNombre = new TableColumn<Ingrediente, String>("Nombre del Ingrediente");
@@ -284,7 +348,7 @@ public class ModuloEmpleado implements EventHandler<Event>{
 
 			tvPlatillos.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			
-			TableColumn<Platillo, Integer> columnaIdPlatillo = new TableColumn<Platillo, Integer>("Identificador ");
+			TableColumn<Platillo, Integer> columnaIdPlatillo = new TableColumn<Platillo, Integer>("ID");
 			columnaIdPlatillo.setCellValueFactory(new PropertyValueFactory<Platillo, Integer>("idPlatillo"));
 
 			TableColumn<Platillo, String> columnaNombre = new TableColumn<Platillo, String>("Nombre del Platillo");
@@ -308,7 +372,7 @@ public class ModuloEmpleado implements EventHandler<Event>{
 
 			tvBebidas.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			
-			TableColumn<Bebida, Integer> columnaIdBebida = new TableColumn<Bebida, Integer>("Identificador ");
+			TableColumn<Bebida, Integer> columnaIdBebida = new TableColumn<Bebida, Integer>("ID");
 			columnaIdBebida.setCellValueFactory(new PropertyValueFactory<Bebida, Integer>("idBebida"));
 			
 			TableColumn<Bebida, String> columnaNombre = new TableColumn<Bebida, String>("Nombre del Bebida");
@@ -433,11 +497,6 @@ public class ModuloEmpleado implements EventHandler<Event>{
 					
 					getTabPanePrincipal().getTabs().remove(getTabPedidosModificar());
 					
-				}else if(event.getSource().equals(btnEstadoEspera)){
-					Pedido pedido = new Pedido(pedidoModificar.getIdPedido(), "espera");
-					mPedido.modificarPedido(pedido);
-					
-					getTabPanePrincipal().getTabs().remove(getTabPedidosModificar());
 				}else if(event.getSource().equals(btnEstadoPagado)){
 					Pedido estado = new Pedido(pedidoModificar.getIdPedido(), pedidoModificar.getEstado());
 					switch(mPedido.obtenerEstado(estado)){
@@ -479,6 +538,12 @@ public class ModuloEmpleado implements EventHandler<Event>{
 					this.cerrarPago();
 				}else if(event.getSource().equals(btnTarjeta)){
 					this.cerrarPago();
+				}else if(event.getSource().equals(btnInstrucciones)){
+					lblInstrucciones.setVisible(true);
+				}
+			}else if(event.getEventType() == MouseEvent.DRAG_DETECTED){
+				if(event.getSource().equals(btnInstrucciones)){
+					lblInstrucciones.setVisible(false);
 				}
 			}
 		}
