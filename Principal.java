@@ -199,6 +199,7 @@ public class Principal extends Application implements EventHandler<Event>{
 	}
 	/**
 	*	@return Barra De Menu
+	*	@param primaryScene Para cambiar el Tema
 	*/
 	public MenuBar menuBar(){
 		miUno = new MenuItem("Cerrar");

@@ -4,7 +4,7 @@ DROP DATABASE dbRestauranteProyecto2013155
 GO
 CREATE DATABASE dbRestauranteProyecto2013155
 GO
-USE dbRestauranteProyecto
+USE dbRestauranteProyecto2013155
 GO
 CREATE TABLE Rol(
 	idRol INT IDENTITY(1,1),
@@ -115,6 +115,45 @@ BEGIN
 	INSERT INTO Factura (idCliente,fecha,idPedido) VALUES (@idCliente,@fecha,@idPedido)
 END
 GO
+CREATE PROCEDURE consultarPedidoEstado @idPedido INT
+AS
+BEGIN
+	SELECT Pedido.idPedido, Pedido.estado FROM Pedido WHERE Pedido.idPedido=@idPedido
+END
+GO
+CREATE PROCEDURE consultarPedidoBebida @idPedido INT
+AS
+BEGIN
+	SELECT Bebida.nombre FROM DetallePedidoBebida 
+		INNER JOIN Bebida ON DetallePedidoBebida.idBebida=Bebida.idBebida WHERE DetallePedidoBebida.idPedido=@idPedido
+END
+GO
+CREATE PROCEDURE consultarPedidoPlatillo @idPedido INT
+AS
+BEGIN
+	SELECT Platillo.nombre FROM DetallePedidoPlatillo 
+		INNER JOIN Platillo ON DetallePedidoPlatillo.idPlatillo=Platillo.idPlatillo WHERE DetallePedidoPlatillo.idPedido=@idPedido
+END
+GO
+CREATE PROCEDURE consultarPedidoIngrediente @idPedido INT
+AS
+BEGIN
+	SELECT Ingrediente.nombre FROM DetallePedidoIngrediente 
+		INNER JOIN Ingrediente ON DetallePedidoIngrediente.idIngrediente=Ingrediente.idIngrediente WHERE DetallePedidoIngrediente.idPedido=@idPedido
+END
+GO
+CREATE PROCEDURE ConsultarPedido
+AS
+BEGIN
+	SELECT Pedido.idPedido, Pedido.estado FROM Pedido
+	SELECT Bebida.nombre FROM DetallePedidoBebida 
+		INNER JOIN Bebida ON DetallePedidoBebida.idBebida=Bebida.idBebida
+	SELECT Platillo.nombre FROM DetallePedidoPlatillo 
+		INNER JOIN Platillo ON DetallePedidoPlatillo.idPlatillo=Platillo.idPlatillo
+	SELECT Ingrediente.nombre FROM DetallePedidoIngrediente 
+		INNER JOIN Ingrediente ON DetallePedidoIngrediente.idIngrediente=Ingrediente.idIngrediente
+END
+GO
 --Insertar Rol
 EXEC insertarRol 'administrador'
 EXEC insertarRol 'chef'
@@ -148,15 +187,37 @@ INSERT INTO Platillo(nombre,precio) VALUES ('Manjar',1305)
 --Insertar Bebidas
 Insert INTO Bebida(nombre,precio) VALUES('Agua Mineral',125)
 INSERT INTO Bebida(nombre,precio) VALUES ('Pastel',1504) 
+Insert INTO Bebida(nombre,precio) VALUES('Agua asdf',125)
+INSERT INTO Bebida(nombre,precio) VALUES ('sdf',1504) 
 --INSERTAR PEDIDOS--
-INSERT INTO DetallePedidoPlatillo(idPedido,idPlatillo,cantidad) VALUES (1,1,5)
-INSERT INTO DetallePedidoPlatillo(idPedido,idPlatillo,cantidad) VALUES (1,2,6)
-INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad) VALUES(1,1,1)
-INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad) VALUES(1,2,2)
-SELECT * FROM Usuario
+INSERT INTO DetallePedidoPlatillo(idPedido,idPlatillo,cantidad)			VALUES (1,1,5)
+INSERT INTO DetallePedidoPlatillo(idPedido,idPlatillo,cantidad)			VALUES (1,2,6)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(1,1,1)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(1,2,2)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(2,1,1)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(2,2,2)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(2,3,1)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(2,4,2)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(3,1,1)
+INSERT INTO DetallePedidoBebida(idPedido,idBebida,cantidad)				VALUES(3,2,2)
+INSERT INTO DetallePedidoIngrediente(idPedido, idIngrediente, cantidad)	VALUES (1,1,10)
+INSERT INTO DetallePedidoIngrediente(idPedido, idIngrediente, cantidad) VALUES (1,2,20)
+INSERT INTO DetallePedidoIngrediente(idPedido, idIngrediente, cantidad) VALUES (2,1,30)
+INSERT INTO DetallePedidoIngrediente(idPedido, idIngrediente, cantidad) VALUES (2,2,40)
+INSERT INTO DetallePedidoIngrediente(idPedido, idIngrediente, cantidad) VALUES (3,1,50)
+INSERT INTO DetallePedidoIngrediente(idPedido, idIngrediente, cantidad) VALUES (3,2,60)
+/*EXEC consultarPedidoEstado		1
+EXEC consultarPedidoBebida		1
+EXEC consultarPedidoPlatillo	1
+EXEC consultarPedidoIngrediente 1*/
+EXEC ConsultarPedido
+/*SELECT * FROM DetallePedidoBebida
+SELECT * FROM DetallePedidoPlatillo
+SELECT * FROM DetallePedidoIngrediente*/
+/*SELECT * FROM Usuario
 SELECT * FROM Pedido
 SELECT * FROM Cliente
 SELECT * FROM Factura
 SELECT * FROM Ingrediente
 SELECT * FROM Bebida
-SELECT * FROM Platillo
+SELECT * FROM Platillo*/
