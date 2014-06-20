@@ -54,7 +54,8 @@ public class ModuloEmpleado implements EventHandler<Event>{
 	private ManejadorIngrediente mIngrediente;
 	private ManejadorBebida mBebida;
 	private ManejadorPlatillo mPlatillo;
-	private Button btnActualizarLista;
+	private Button btnActualizarLista, btnMostrar;
+	private GridPane getContentPedido;
 	//Comprar Pedidos
 	private VBox pago, pagosTarjeta;
 	private TextField tfTarjeta;
@@ -389,8 +390,23 @@ public class ModuloEmpleado implements EventHandler<Event>{
 			bpPedidos = new BorderPane();
 			bpPedidos.setTop(this.getToolBarPrincipal());
 			bpPedidos.setCenter(this.getContentPedidos());
+			btnMostrar = new Button("Mostrar");
+			btnMostrar.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+			bpPedidos.setRight(null);
 		}
 		return bpPedidos;
+	}
+	public GridPane getContentPedido(){
+		if(getContentPedido==null){
+			getContentPedido = new GridPane();
+			HBox hbContentPedido = new HBox();
+			VBox vbPedido = new VBox();
+			VBox vbDetalleIngrediente = new VBox();
+			VBox vbDetalleBebida = new VBox();
+			VBox vbDetallePlatillo = new VBox();
+			
+		}
+		return getContentPedido;
 	}
 	/**
 	* @return Tabla que muestra todos los pedidos.
@@ -549,6 +565,8 @@ public class ModuloEmpleado implements EventHandler<Event>{
 				}else if(event.getSource().equals(btnTarjeta)){
 					this.cerrarPago();
 				}else if(event.getSource().equals(btnInstrucciones)){
+					lblInstrucciones.setVisible(true);
+				}else if(event.getSource().equals(btnMostrar)){
 					lblInstrucciones.setVisible(true);
 				}
 			}else if(event.getEventType() == MouseEvent.DRAG_DETECTED){
